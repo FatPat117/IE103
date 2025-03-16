@@ -1,0 +1,131 @@
+.header {
+    padding: 5px 20px;
+    background: var(--background-color);
+    margin-bottom: 60px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Logo */
+.logo__img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+/* Navbar */
+.navbar__list {
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar__item {
+    position: relative;
+}
+
+.navbar__link {
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 1.6rem;
+    font-weight: 600;
+    padding: 10px 15px;
+    transition: all 0.3s ease-in-out;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    user-select: none;
+}
+
+.navbar__link:hover {
+    background-color: #f0f0f0;
+    color: var(--text-hover-color);
+    border: 2px solid var(--text-hover-color);
+    border-color: var(--text-hover-color);
+    box-shadow: 0px 4px 10px rgba(0, 123, 255, 0.2);
+}
+
+.navbar__link.active {
+    color: var(--text-hover-color);
+    font-weight: bold;
+}
+
+.navbar__item .navbar__link.active::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    width: 30%;
+    height: 3px;
+    background-color: var(--text-hover-color);
+    transform: translateX(-50%);
+    border-radius: 5px;
+}
+
+/* Actions */
+.user_details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user_details:hover .user__name {
+    color: var(--thick-text-color);
+}
+
+.user_details:hover {
+    cursor: pointer;
+}
+
+.user__name {
+    color: var(--thin-text-color);
+}
+
+.user__avatar {
+    border-radius: 50%;
+}
+
+/* Tooltip */
+.wrapper {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease-in-out;
+    color: var(--thick-text-color);
+}
+
+.action-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.icon {
+    margin-right: 10px;
+    font-size: 1.6rem;
+}
+
+.title {
+    font-size: 1.4rem;
+}
