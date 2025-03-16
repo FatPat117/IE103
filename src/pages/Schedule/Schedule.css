@@ -5,11 +5,15 @@
         border-collapse: collapse;
         text-align: center;
         font-family: "Poppins", sans-serif;
-        font-size: 1.4rem;
+        font-size: 1.6rem;
         table-layout: fixed;
         border-radius: 10px;
         overflow: hidden;
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.table tr th {
+        font-size: 1.8rem;
 }
 
 th,
@@ -21,9 +25,24 @@ td {
         vertical-align: middle;
 }
 
+.period-cell {
+        padding: 12px 10px;
+        text-align: center;
+        font-weight: bold;
+        height: 60px; /* Tăng chiều cao của ô */
+}
+.period-cell__tiet {
+        margin-bottom: 4px;
+}
+
+.period-cell__hour,
+.period-cell__tiet {
+        display: block;
+}
+
 /* Header */
 .table__heading th {
-        background-color: #007bff;
+        background-color: #96bfeb;
         color: white;
         font-weight: 700;
         padding: 12px;
@@ -40,6 +59,11 @@ th:first-child {
 /* Ô trống */
 td {
         background-color: #cccccc !important;
+}
+
+.period-cell br {
+        display: inline-block;
+        margin-top: 5px;
 }
 
 /* Màu xen kẽ hàng */
@@ -101,6 +125,14 @@ tbody tr:hover td {
         color: #777;
 }
 
+.course-start {
+        margin-bottom: 3px;
+}
+
+.course-start,
+.course-end {
+        display: block;
+}
 .delete-icon {
         position: absolute;
         top: 5px;

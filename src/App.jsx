@@ -4,11 +4,11 @@ import Schedule from "./pages/Schedule/Schedule";
 
 function App() {
         return (
-                <div>
+                <>
                         <Header />
                         <Schedule />
                         <Footer />
-                </div>
+                </>
         );
 }
 

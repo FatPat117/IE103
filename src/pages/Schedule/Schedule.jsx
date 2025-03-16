@@ -92,7 +92,13 @@ function Schedule() {
                                         {periods.map((period, periodIndex) => (
                                                 <tr key={period.label}>
                                                         <td className="period-cell">
-                                                                {period.label} <br /> ({period.time})
+                                                                <span className="period-cell__tiet">
+                                                                        {period.label}
+                                                                </span>
+
+                                                                <span className="period-cell__hour">
+                                                                        ({period.time})
+                                                                </span>
                                                         </td>
                                                         {["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"].map(
                                                                 (day) => {
@@ -137,15 +143,18 @@ function Schedule() {
                                                                                                 {course.start &&
                                                                                                         course.end && (
                                                                                                                 <span className="course-date">
-                                                                                                                        BD:{" "}
-                                                                                                                        {
-                                                                                                                                course.start
-                                                                                                                        }{" "}
-                                                                                                                        <br />{" "}
-                                                                                                                        KT:{" "}
-                                                                                                                        {
-                                                                                                                                course.end
-                                                                                                                        }
+                                                                                                                        <span className="course-start">
+                                                                                                                                BD:
+                                                                                                                                {
+                                                                                                                                        course.start
+                                                                                                                                }
+                                                                                                                        </span>
+                                                                                                                        <span className="course-end">
+                                                                                                                                KT:
+                                                                                                                                {
+                                                                                                                                        course.end
+                                                                                                                                }
+                                                                                                                        </span>
                                                                                                                 </span>
                                                                                                         )}
                                                                                                 {hovered ===
