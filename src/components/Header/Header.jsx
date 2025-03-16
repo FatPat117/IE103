@@ -1,5 +1,7 @@
+import classNames from "classnames/bind";
+import styles from "../Header/Header.module.css";
+
 import React, { useState } from "react";
-import "../Header/Header.css";
 import logo from "../../assets/image/logo.png";
 import avatar from "../../assets/image/avatar.jpg";
 
@@ -7,6 +9,8 @@ import { Link } from "react-router-dom";
 import Tippy from "@tippyjs/react/headless";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOut, faUser } from "@fortawesome/free-solid-svg-icons";
+
+const cx = classNames.bind(styles);
 
 function Header() {
     const [activeLink, setActiveLink] = useState("dashboard");
@@ -16,52 +20,52 @@ function Header() {
     };
 
     return (
-        <header className="header">
-            <div className="container">
-                <div className="header__content">
+        <header className={cx("header")}>
+            <div className={cx("container")}>
+                <div className={cx("header__content")}>
                     {/* Logo */}
-                    <div className="logo">
+                    <div className={cx("logo")}>
                         <Link to="/">
-                            <img src={logo} alt="logo" className="logo__img" />
+                            <img src={logo} alt="logo" className={cx("logo__img")} />
                         </Link>
                     </div>
 
                     {/* Navigation */}
-                    <nav className="navbar">
-                        <ul className="navbar__list">
-                            <li className="navbar__item">
+                    <nav className={cx("navbar")}>
+                        <ul className={cx("navbar__list")}>
+                            <li className={cx("navbar__item")}>
                                 <Link
                                     to="/dashboard"
-                                    className={`navbar__link ${activeLink === "dashboard" ? "active" : ""}`}
+                                    className={cx("navbar__link", { active: activeLink === "dashboard" })}
                                     onClick={() => handleNavClick("dashboard")}
                                 >
                                     Dashboard
                                 </Link>
                             </li>
 
-                            <li className="navbar__item">
+                            <li className={cx("navbar__item")}>
                                 <Link
                                     to="/dang-ky-hoc-phan"
-                                    className={`navbar__link ${activeLink === "dang-ky-hoc-phan" ? "active" : ""}`}
+                                    className={cx("navbar__link", { active: activeLink === "dang-ky-hoc-phan" })}
                                     onClick={() => handleNavClick("dang-ky-hoc-phan")}
                                 >
                                     Đăng ký học phần
                                 </Link>
                             </li>
-                            <li className="navbar__item">
+                            <li className={cx("navbar__item")}>
                                 <Link
                                     to="/xac-nhan-hoc-phan"
-                                    className={`navbar__link ${activeLink === "xac-nhan-hoc-phan" ? "active" : ""}`}
+                                    className={cx("navbar__link", { active: activeLink === "xac-nhan-hoc-phan" })}
                                     onClick={() => handleNavClick("xac-nhan-hoc-phan")}
                                 >
                                     Xác nhận đăng ký học phần
                                 </Link>
                             </li>
 
-                            <li className="navbar__item">
+                            <li className={cx("navbar__item")}>
                                 <Link
                                     to="/danh-sach-lop"
-                                    className={`navbar__link ${activeLink === "danh-sach-lop" ? "active" : ""}`}
+                                    className={cx("navbar__link", { active: activeLink === "danh-sach-lop" })}
                                     onClick={() => handleNavClick("danh-sach-lop")}
                                 >
                                     Danh sách lớp đã đăng ký
@@ -71,33 +75,33 @@ function Header() {
                     </nav>
 
                     {/* Actions */}
-                    <div className="header__action">
+                    <div className={cx("header__action")}>
                         <Tippy
                             interactive
                             offset={[12, 8]}
                             delay={[0, 700]}
                             placement="bottom-end"
                             render={(attrs) => (
-                                <div className="wrapper" tabIndex="-1" {...attrs}>
-                                    <button className="action-btn">
-                                        <span className="icon">
+                                <div className={cx("wrapper")} tabIndex="-1" {...attrs}>
+                                    <button className={cx("action-btn")}>
+                                        <span className={cx("icon")}>
                                             <FontAwesomeIcon icon={faUser} />
                                         </span>
-                                        <span className="title">Hồ sơ</span>
+                                        <span className={cx("title")}>Hồ sơ</span>
                                     </button>
 
-                                    <button className="action-btn">
-                                        <span className="icon">
+                                    <button className={cx("action-btn")}>
+                                        <span className={cx("icon")}>
                                             <FontAwesomeIcon icon={faSignOut} />
                                         </span>
-                                        <span className="title">Thoát</span>
+                                        <span className={cx("title")}>Thoát</span>
                                     </button>
                                 </div>
                             )}
                         >
-                            <div className="user_details">
-                                <p className="user__name">Trần Duy Nhân</p>
-                                <img src={avatar} className="user__avatar" alt="Avatar" />
+                            <div className={cx("user_details")}>
+                                <p className={cx("user__name")}>Trần Duy Nhân</p>
+                                <img src={avatar} className={cx("user__avatar")} alt="Avatar" />
                             </div>
                         </Tippy>
                     </div>
