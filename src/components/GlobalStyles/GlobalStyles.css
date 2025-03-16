@@ -134,8 +134,12 @@ table {
 }
 
 :root {
-    --primary-color: #000;
-    --hover-item: #572af8;
+    /* Biến */
+    --background-color: #fff;
+    --text-color: #5989ff;
+    --text-hover-color: #2f6bff;
+    --thin-text-color: #787878;
+    --thick-text-color: #262a2e;
 }
 
 html,
