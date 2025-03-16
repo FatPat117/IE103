@@ -1,7 +1,7 @@
-import Schedule from "./pages/Schedule/Schedule";
+import Header from "./components/Header/Header";
 
 function App() {
-        return <Schedule />;
+    return <Header />;
 }
 
 export default App;
