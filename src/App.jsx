@@ -6,8 +6,6 @@ function App() {
         return (
                 <div>
                         <Header />
-                        <Schedule />
-                        <Footer />
                 </div>
         );
 }
