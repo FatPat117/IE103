@@ -40,15 +40,6 @@ function Header() {
                             </li>
                             <li className="navbar__item">
                                 <Link
-                                    to="/danh-sach-lop"
-                                    className={`navbar__link ${activeLink === "danh-sach-lop" ? "active" : ""}`}
-                                    onClick={() => handleNavClick("danh-sach-lop")}
-                                >
-                                    Danh sách lớp đã đăng ký
-                                </Link>
-                            </li>
-                            <li className="navbar__item">
-                                <Link
                                     to="/dang-ky-hoc-phan"
                                     className={`navbar__link ${activeLink === "dang-ky-hoc-phan" ? "active" : ""}`}
                                     onClick={() => handleNavClick("dang-ky-hoc-phan")}
@@ -63,6 +54,15 @@ function Header() {
                                     onClick={() => handleNavClick("xac-nhan-hoc-phan")}
                                 >
                                     Xác nhận đăng ký học phần
+                                </Link>
+                            </li>
+                            <li className="navbar__item">
+                                <Link
+                                    to="/danh-sach-lop"
+                                    className={`navbar__link ${activeLink === "danh-sach-lop" ? "active" : ""}`}
+                                    onClick={() => handleNavClick("danh-sach-lop")}
+                                >
+                                    Danh sách lớp đã đăng ký
                                 </Link>
                             </li>
                         </ul>
