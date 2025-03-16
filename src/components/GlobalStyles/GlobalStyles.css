@@ -91,6 +91,9 @@ video {
     font: inherit;
     vertical-align: baseline;
 }
+strong {
+    font-weight: bold;
+}
 /* HTML5 display-role reset for older browsers */
 article,
 aside,
@@ -145,6 +148,7 @@ table {
 html,
 body {
     scroll-behavior: smooth;
+    height: 100vh;
 }
 
 html {
@@ -154,7 +158,7 @@ html {
 body {
     font-size: 1.6rem;
     font-family: "Poppins", sans-serif;
-    background: #fff;
+    background: var(--background-color);
 }
 
 /* Common */

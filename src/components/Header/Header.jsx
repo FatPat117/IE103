@@ -38,6 +38,7 @@ function Header() {
                                     Dashboard
                                 </Link>
                             </li>
+
                             <li className="navbar__item">
                                 <Link
                                     to="/dang-ky-hoc-phan"
@@ -56,6 +57,7 @@ function Header() {
                                     Xác nhận đăng ký học phần
                                 </Link>
                             </li>
+
                             <li className="navbar__item">
                                 <Link
                                     to="/danh-sach-lop"
