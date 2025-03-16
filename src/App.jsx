@@ -6,9 +6,13 @@ function App() {
         return (
                 <>
                         <Header />
+<<<<<<< HEAD
                         <Schedule />
                         <Footer />
                 </>
+=======
+                </div>
+>>>>>>> 38dfff2e0c81ce4ff7360ea0260ee0a52965c851
         );
 }
 
