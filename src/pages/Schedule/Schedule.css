@@ -1,0 +1,116 @@
+.table {
+        margin: 80px auto 0;
+        min-width: 1200px;
+        height: 70vh;
+        border-collapse: collapse;
+        text-align: center;
+        font-family: "Poppins", sans-serif;
+        font-size: 1.4rem;
+        table-layout: fixed;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+th,
+td {
+        border: 1.5px solid #ddd;
+        padding: 12px;
+        width: calc(100% / 7);
+        text-align: center;
+        vertical-align: middle;
+}
+
+/* Header */
+.table__heading th {
+        background-color: #007bff;
+        color: white;
+        font-weight: 700;
+        padding: 12px;
+}
+
+/* Cột đầu tiên */
+td:first-child,
+th:first-child {
+        font-weight: 600;
+        background-color: #f8f9fa;
+        color: #333;
+}
+
+/* Ô trống */
+td {
+        background-color: #cccccc !important;
+}
+
+/* Màu xen kẽ hàng */
+tbody tr:nth-child(odd) td {
+        background-color: #f1f1f1;
+}
+
+/* Hiệu ứng hover */
+tbody tr:hover td {
+        background-color: #e3f2fd;
+        transition: background-color 0.3s;
+}
+
+.schedule__course {
+        background: #fff;
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+        font-size: 1.2rem;
+        position: relative;
+        transition: background 0.3s ease;
+}
+
+.schedule__course[rowspan] {
+        background: #fff !important; /* Màu vàng nhạt */
+        border: 2px solid #ccc; /* Viền cam */
+        font-weight: bold;
+}
+
+.course-code {
+        display: inline-block;
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+}
+
+.course-title {
+        display: inline-block;
+        font-size: 1.4rem;
+        font-weight: 300;
+        margin-bottom: 7px;
+}
+
+.teacher-name {
+        display: inline-block;
+        font-weight: bold;
+        font-size: 1.4rem;
+        margin-bottom: 5px;
+}
+
+.room {
+        font-style: italic;
+        color: #555;
+}
+
+.course-date {
+        margin-top: 6px;
+        display: inline-block;
+        color: #777;
+}
+
+.delete-icon {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        cursor: pointer;
+        font-size: 1.5rem;
+        color: red;
+        display: none; /* Mặc định ẩn */
+}
+
+.schedule__course:hover .delete-icon {
+        display: inline-block; /* Hiện khi hover */
+}
