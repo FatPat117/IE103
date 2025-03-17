@@ -2,7 +2,7 @@
         margin-top: 85px;
         font-size: 1.8rem;
         font-weight: bold;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
 }
 
 .table {
@@ -13,8 +13,20 @@
 
 .table th,
 .table td {
-        border: 1px solid #ddd;
+        border: 1px solid #dacfcf;
         padding: 10px;
+}
+
+.table th {
+        font-size: 1.7rem;
+        font-weight: 600;
+        padding: 15px;
+}
+
+.table td {
+        background-color: #fff !important;
+        padding: 22px;
+        white-space: nowrap;
 }
 
 .table th {
