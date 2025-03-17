@@ -1,16 +1,15 @@
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
-import Home from "./pages/Home/Home";
-import Schedule from "./pages/Schedule/Schedule";
+import Confirmed from "./pages/ConfirmedList/Confirmed";
 
 function App() {
-    return (
-        <>
-            <Header />
-            <Schedule />
-            <Footer />
-        </>
-    );
+        return (
+                <>
+                        <Header />
+                        <Confirmed />
+                        <Footer />
+                </>
+        );
 }
 
 export default App;
