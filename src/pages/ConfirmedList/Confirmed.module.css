@@ -48,8 +48,13 @@
 }
 
 .warning-text {
+        cursor: pointer;
+        border-radius: 10px;
+        background: #ccc;
+        padding: 20px;
+        font-size: 2rem;
         color: red;
-        font-size: 14px;
-        margin-top: 10px;
+        font-weight: bold;
+        margin-top: 30px;
         text-align: center;
 }
