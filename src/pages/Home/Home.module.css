@@ -1,0 +1,66 @@
+.wrapper {
+    max-width: 800px;
+    margin: 100px auto 40px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.heading {
+    font-weight: 700;
+    font-size: 2rem;
+    text-align: center;
+    color: var(--thick-text-color);
+    margin-bottom: 20px;
+}
+
+.container {
+    padding: 20px;
+}
+
+.box {
+    background: var(--background-color);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--thick-text-color);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.list {
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.bold {
+    font-weight: 600;
+    color: #333;
+    margin: 20px 0;
+}
+
+.desc {
+    margin-bottom: 10px;
+}
+
+.certificate-list li {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 8px;
+}
+
+.certificate-list li::before {
+    content: "★";
+    position: absolute;
+    left: 10px;
+    top: 1px;
+    color: var(--thick-text-color);
+    font-size: 1.2rem;
+}

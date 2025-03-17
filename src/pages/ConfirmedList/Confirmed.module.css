@@ -35,9 +35,10 @@
 
 .remove-btn {
         background: #ff4d4d;
-        color: white;
+        color: white !important;
         border: none;
-        padding: 5px 8px;
+        padding: 8px 15px;
+        font-weight: bold;
         cursor: pointer;
         font-size: 14px;
         border-radius: 5px;

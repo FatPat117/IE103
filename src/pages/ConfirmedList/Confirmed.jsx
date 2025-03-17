@@ -74,7 +74,7 @@ function Confirmed() {
                                         {registeredCourses.map((course, index) => (
                                                 <tr key={index}>
                                                         <td>
-                                                                <button className={cx("remove-btn")}>➖</button>
+                                                                <button className={cx("remove-btn")}>-</button>
                                                         </td>
                                                         <td>{course.code}</td>
                                                         <td>
