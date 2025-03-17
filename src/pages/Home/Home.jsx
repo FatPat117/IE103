@@ -39,9 +39,8 @@ function Home() {
                         <li>VPET hoặc Cambridge (không cần kiểm tra thêm điểm).</li>
                     </ul>
 
-                    <p className={cx("bold")}>
-                        <p className={cx("bold")}>2. Đã đóng học phí nhưng chưa được đăng ký?</p>
-                    </p>
+                    <p className={cx("bold")}>2. Đã đóng học phí nhưng chưa được đăng ký?</p>
+
                     <p>Vui lòng chờ ít nhất 5 phút để hệ thống cập nhật thông tin.</p>
                 </div>
             </div>
