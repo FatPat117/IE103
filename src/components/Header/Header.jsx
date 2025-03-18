@@ -25,7 +25,7 @@ function Header() {
                 <div className={cx("header__content")}>
                     {/* Logo */}
                     <div className={cx("logo")}>
-                        <Link to="/dashboard">
+                        <Link to="">
                             <img src={logo} alt="logo" className={cx("logo__img")} />
                         </Link>
                     </div>
@@ -83,21 +83,14 @@ function Header() {
                             placement="bottom-end"
                             render={(attrs) => (
                                 <div className={cx("wrapper")} tabIndex="-1" {...attrs}>
-                                    <Link to="/profile">
+                                    <Link to="/login">
                                         <button className={cx("action-btn")}>
                                             <span className={cx("icon")}>
-                                                <FontAwesomeIcon icon={faUser} />
+                                                <FontAwesomeIcon icon={faSignOut} />
                                             </span>
-                                            <span className={cx("title")}>Hồ sơ</span>
+                                            <span className={cx("title")}>Thoát</span>
                                         </button>
                                     </Link>
-
-                                    <button className={cx("action-btn")}>
-                                        <span className={cx("icon")}>
-                                            <FontAwesomeIcon icon={faSignOut} />
-                                        </span>
-                                        <span className={cx("title")}>Thoát</span>
-                                    </button>
                                 </div>
                             )}
                         >
