@@ -15,35 +15,38 @@ import Login from "./pages/Login/Login";
 import AdminRoute from "./routes/AdminRoute";
 
 function App() {
-    const location = useLocation();
-    const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
+        const location = useLocation();
+        const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
 
-    useEffect(() => {
-        setUserRole(localStorage.getItem("userRole"));
-    }, [location.pathname]);
+        useEffect(() => {
+                setUserRole(localStorage.getItem("userRole"));
+        }, [location.pathname]);
 
-    const isLoginPage = location.pathname === "/login";
-    const isAdminPage = location.pathname.startsWith("/admin");
+        const isLoginPage = location.pathname === "/login";
+        const isAdminPage = location.pathname.startsWith("/admin");
 
-    return (
-        <>
-            {!isLoginPage && !isAdminPage && <Header />}
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/dashboard" element={userRole === "admin" ? <Navigate to="/admin" /> : <Home />} />
-                <Route path="/dang-ky-hoc-phan" element={<ClassList />} />
-                <Route path="/danh-sach-lop" element={<Schedule />} />
-                <Route path="/login" element={<Login />} />
+        return (
+                <>
+                        {!isLoginPage && !isAdminPage && <Header />}
+                        <Routes>
+                                <Route path="/" element={<Home />} />
+                                <Route
+                                        path="/dashboard"
+                                        element={userRole === "admin" ? <Navigate to="/admin" /> : <Home />}
+                                />
+                                <Route path="/dang-ky-hoc-phan" element={<ClassList />} />
+                                <Route path="/danh-sach-lop" element={<Schedule />} />
+                                <Route path="/login" element={<Login />} />
 
-                <Route element={<AdminRoute />}>
-                    <Route path="/admin" element={<AdminDashboard />} />
-                    <Route path="/admin/subjects" element={<Subjects />} />
-                    <Route path="/admin/students" element={<Students />} />
-                </Route>
-            </Routes>
-            {!isLoginPage && !isAdminPage && <Footer />}
-        </>
-    );
+                                <Route element={<AdminRoute />}>
+                                        <Route path="/admin" element={<AdminDashboard />} />
+                                        <Route path="/admin/subjects" element={<Subjects />} />
+                                        <Route path="/admin/students" element={<Students />} />
+                                </Route>
+                        </Routes>
+                        {!isLoginPage && !isAdminPage && <Footer />}
+                </>
+        );
 }
 
 export default App;
