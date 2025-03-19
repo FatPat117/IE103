@@ -1,10 +1,17 @@
-import { Layout, Menu } from "antd";
-import { Link, Outlet } from "react-router-dom";
+import { Button, Layout, Menu } from "antd";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { DashboardOutlined, BookOutlined, UserOutlined } from "@ant-design/icons";
 
 const { Header, Content, Sider } = Layout;
 
 const Admin = () => {
+    const navigate = useNavigate();
+    const userRole = localStorage.getItem("userRole");
+
+    const handleBack = () => {
+        navigate("/");
+    };
+
     return (
         <Layout style={{ minHeight: "100vh" }}>
             <Sider collapsible>
@@ -24,10 +31,24 @@ const Admin = () => {
                 </Menu>
             </Sider>
 
-            {/* Nội dung chính */}
             <Layout>
-                <Header style={{ background: "#fff", padding: 0, textAlign: "center", fontSize: "18px" }}>
-                    <b>Admin Dashboard</b>
+                <Header
+                    style={{
+                        background: "#fff",
+                        padding: "0 10px",
+                        fontSize: "18px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <div style={{ width: "100px" }}></div>
+                    <h1>Admin Dashboard</h1>
+                    {userRole === "admin" && (
+                        <Button type="primary" onClick={handleBack}>
+                            Back to Dashboard
+                        </Button>
+                    )}
                 </Header>
                 <Content>
                     <Outlet />

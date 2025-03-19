@@ -45,16 +45,6 @@
     margin-top: 20px;
 }
 
-.addButton {
-    margin-bottom: 16px;
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.addButton:hover {
-    background-color: var(--text-hover-color);
-    border-color: #005fa3;
-}
 
 .editBtn {
     background-color: var(--text-color);
@@ -76,4 +66,20 @@
 .deleteBtn:hover {
     background-color: #d9363e;
     border-color: #d9363e;
+}
+
+.backButtonContainer {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+}
+
+.backButton {
+    width: 100%;
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    font-weight: bold;
+    font-size: 16px;
 }

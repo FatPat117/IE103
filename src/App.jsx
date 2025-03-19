@@ -30,7 +30,7 @@ function App() {
             {!isLoginPage && !isAdminPage && <Header />}
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/dashboard" element={userRole === "admin" ? <Navigate to="/admin" /> : <Home />} />
+                <Route path="/dashboard" element={<Home />} />
                 <Route path="/dang-ky-hoc-phan" element={<ClassList />} />
                 <Route path="/danh-sach-lop" element={<Schedule />} />
                 <Route path="/login" element={<Login />} />

@@ -14,26 +14,16 @@ function Login() {
     const handleLogin = (e) => {
         e.preventDefault();
 
-        // Fake API
-        const adminAccount = { id: "admin", password: "admin123", role: "admin" };
-        const studentAccount = { id: "SV001", password: "student123", role: "student" };
+        const accounts = {
+            admin: { id: "admin", password: "admin123", role: "admin" },
+            student: { id: "SV001", password: "student123", role: "student" },
+        };
 
-        let userRole = null;
+        let user = Object.values(accounts).find((acc) => acc.id === studentId && acc.password === password);
 
-        if (studentId === adminAccount.id && password === adminAccount.password) {
-            userRole = "admin";
-        } else if (studentId === studentAccount.id && password === studentAccount.password) {
-            userRole = "student";
-        }
-
-        if (userRole) {
-            localStorage.setItem("userRole", userRole);
-
-            if (userRole === "admin") {
-                navigate("/admin");
-            } else {
-                navigate("/dashboard");
-            }
+        if (user) {
+            localStorage.setItem("userRole", user.role);
+            navigate(user.role === "admin" ? "/admin" : "/dashboard");
         } else {
             alert("Mã số sinh viên hoặc mật khẩu không đúng!");
         }
@@ -65,9 +55,6 @@ function Login() {
                             Đăng nhập
                         </button>
                     </form>
-                    <a href="#" className={cx("forgot-password")}>
-                        Quên mật khẩu?
-                    </a>
                 </div>
             </div>
         </div>

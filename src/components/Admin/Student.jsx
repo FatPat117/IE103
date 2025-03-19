@@ -39,7 +39,7 @@ const Students = () => {
                     <Title level={2} className={styles.pageTitle}>
                         Quản lý Sinh viên
                     </Title>
-                    <Button type="primary" icon={<PlusOutlined />} className={styles.addButton}>
+                    <Button type="primary" icon={<PlusOutlined />}>
                         Thêm sinh viên
                     </Button>
                     <div className={styles.tableContainer}>
