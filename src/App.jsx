@@ -1,20 +1,23 @@
-import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
 
-import Footer from "./components/Footer/Footer";
-import Header from "./components/Header/Header";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import Students from "./components/Admin/Student";
 import Subjects from "./components/Admin/Subjects";
+import Footer from "./components/Footer/Footer";
+import Header from "./components/Header/Header";
 
 import ClassList from "./pages/ClassList/ClassList";
 import Home from "./pages/Home/Home";
-import Schedule from "./pages/Schedule/Schedule";
 import Login from "./pages/Login/Login";
+import Schedule from "./pages/Schedule/Schedule";
 
 import AdminRoute from "./routes/AdminRoute";
 
 function App() {
+        const location = useLocation();
+        const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
+
         const location = useLocation();
         const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
 
@@ -30,10 +33,7 @@ function App() {
                         {!isLoginPage && !isAdminPage && <Header />}
                         <Routes>
                                 <Route path="/" element={<Home />} />
-                                <Route
-                                        path="/dashboard"
-                                        element={userRole === "admin" ? <Navigate to="/admin" /> : <Home />}
-                                />
+                                <Route path="/dashboard" element={<Home />} />
                                 <Route path="/dang-ky-hoc-phan" element={<ClassList />} />
                                 <Route path="/danh-sach-lop" element={<Schedule />} />
                                 <Route path="/login" element={<Login />} />
