@@ -1,0 +1,85 @@
+.admin-container {
+    background-color: var(--login-bg);
+    min-height: 100vh;
+    padding: 24px;
+}
+
+.card {
+    background: var(--background-color);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.card h3 {
+    color: var(--text-color);
+}
+
+.card p {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.pageContainer {
+    background-color: var(--login-bg);
+    min-height: 100vh;
+    padding: 24px;
+}
+
+.cardContainer {
+    background: var(--background-color);
+    padding: 24px;
+    border-radius: 10px;
+    box-shadow: var(--login-bg);
+    text-align: center;
+}
+
+.pageTitle {
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.tableContainer {
+    margin-top: 20px;
+}
+
+
+.editBtn {
+    background-color: var(--text-color);
+    border-color: var(--text-color);
+    color: var(--background-color);
+}
+
+.editBtn:hover {
+    background-color: var(--text-hover-color);
+    border-color: var(--text-hover-color);
+}
+
+.deleteBtn {
+    background-color: #ff4d4f;
+    border-color: #ff4d4f;
+    color: var(--background-color);
+}
+
+.deleteBtn:hover {
+    background-color: #d9363e;
+    border-color: #d9363e;
+}
+
+.backButtonContainer {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+}
+
+.backButton {
+    width: 100%;
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    font-weight: bold;
+    font-size: 16px;
+}
