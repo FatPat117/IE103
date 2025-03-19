@@ -39,7 +39,7 @@ const Subjects = () => {
                     <Title level={2} className={styles.pageTitle}>
                         Quản lý Môn học
                     </Title>
-                    <Button type="primary" icon={<PlusOutlined />} className={styles.addButton}>
+                    <Button type="primary" icon={<PlusOutlined />}>
                         Thêm môn học
                     </Button>
                     <div className={styles.tableContainer}>
