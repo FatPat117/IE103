@@ -23,7 +23,8 @@ function Login() {
 
         if (user) {
             localStorage.setItem("userRole", user.role);
-            navigate(user.role === "admin" ? "/admin" : "/dashboard");
+            navigate("/dashboard");
+            window.location.reload();
         } else {
             alert("Mã số sinh viên hoặc mật khẩu không đúng!");
         }

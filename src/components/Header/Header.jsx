@@ -19,13 +19,15 @@ function Header() {
         setActiveLink(link);
     };
 
+    const userRole = localStorage.getItem("userRole") === "admin" ? true : false;
+
     return (
         <header className={cx("header")}>
             <div className={cx("container")}>
                 <div className={cx("header__content")}>
                     {/* Logo */}
                     <div className={cx("logo")}>
-                        <Link to="">
+                        <Link to="" onClick={() => handleNavClick("dashboard")}>
                             <img src={logo} alt="logo" className={cx("logo__img")} />
                         </Link>
                     </div>
@@ -83,8 +85,24 @@ function Header() {
                             placement="bottom-end"
                             render={(attrs) => (
                                 <div className={cx("wrapper")} tabIndex="-1" {...attrs}>
+                                    {userRole ? (
+                                        <Link to="/admin">
+                                            <button className={cx("action-btn")}>
+                                                <span className={cx("icon")}>
+                                                    <FontAwesomeIcon icon={faUser} />
+                                                </span>
+                                                <span className={cx("title")}>Admin Dashboard</span>
+                                            </button>
+                                        </Link>
+                                    ) : null}
+
                                     <Link to="/login">
-                                        <button className={cx("action-btn")}>
+                                        <button
+                                            className={cx("action-btn")}
+                                            onClick={() => {
+                                                localStorage.removeItem("userRole");
+                                            }}
+                                        >
                                             <span className={cx("icon")}>
                                                 <FontAwesomeIcon icon={faSignOut} />
                                             </span>
