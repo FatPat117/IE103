@@ -20,11 +20,6 @@ function Header() {
                 setActiveLink(link);
         };
 
-        const handleLogout = () => {
-                localStorage.removeItem("userRole");
-                navigate("/login");
-        };
-
         return (
                 <header className={cx("header")}>
                         <div className={cx("container")}>
@@ -103,19 +98,18 @@ function Header() {
                                                         placement="bottom-end"
                                                         render={(attrs) => (
                                                                 <div className={cx("wrapper")} tabIndex="-1" {...attrs}>
-                                                                        <button
-                                                                                className={cx("action-btn")}
-                                                                                onClick={handleLogout}
-                                                                        >
-                                                                                <span className={cx("icon")}>
-                                                                                        <FontAwesomeIcon
-                                                                                                icon={faSignOut}
-                                                                                        />
-                                                                                </span>
-                                                                                <span className={cx("title")}>
-                                                                                        Thoát
-                                                                                </span>
-                                                                        </button>
+                                                                        <Link to="/login">
+                                                                                <button className={cx("action-btn")}>
+                                                                                        <span className={cx("icon")}>
+                                                                                                <FontAwesomeIcon
+                                                                                                        icon={faSignOut}
+                                                                                                />
+                                                                                        </span>
+                                                                                        <span className={cx("title")}>
+                                                                                                Thoát
+                                                                                        </span>
+                                                                                </button>
+                                                                        </Link>
                                                                 </div>
                                                         )}
                                                 >
