@@ -11,6 +11,7 @@ import ClassList from "./pages/ClassList/ClassList";
 import Home from "./pages/Home/Home";
 import Schedule from "./pages/Schedule/Schedule";
 import Login from "./pages/Login/Login";
+import Confirmed from "./pages/ConfirmedList/Confirmed";
 
 import AdminRoute from "./routes/AdminRoute";
 
@@ -22,19 +23,23 @@ function App() {
                 setUserRole(localStorage.getItem("userRole"));
         }, [location.pathname]);
 
+        console.log("userRole:", userRole);
+
         const isLoginPage = location.pathname === "/login";
         const isAdminPage = location.pathname.startsWith("/admin");
+
+        if (!userRole && !isLoginPage) {
+                return <Navigate to="/login" replace />;
+        }
 
         return (
                 <>
                         {!isLoginPage && !isAdminPage && <Header />}
                         <Routes>
                                 <Route path="/" element={<Home />} />
-                                <Route
-                                        path="/dashboard"
-                                        element={userRole === "admin" ? <Navigate to="/admin" /> : <Home />}
-                                />
+                                <Route path="/dashboard" element={<Home />} />
                                 <Route path="/dang-ky-hoc-phan" element={<ClassList />} />
+                                <Route path="/xac-nhan-hoc-phan" element={<Confirmed />} />
                                 <Route path="/danh-sach-lop" element={<Schedule />} />
                                 <Route path="/login" element={<Login />} />
 
