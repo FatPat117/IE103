@@ -12,6 +12,7 @@ import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Schedule from "./pages/Schedule/Schedule";
 
+
 import AdminRoute from "./routes/AdminRoute";
 
 function App() {
