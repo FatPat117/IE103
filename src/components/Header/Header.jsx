@@ -1,7 +1,7 @@
 import classNames from "classnames/bind";
 import styles from "./Header.module.scss";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../assets/image/logo.png";
 import avatar from "../../assets/image/avatar.jpg";
 
@@ -13,11 +13,17 @@ import { faSignOut, faUser } from "@fortawesome/free-solid-svg-icons";
 const cx = classNames.bind(styles);
 
 function Header() {
-    const [activeLink, setActiveLink] = useState("dashboard");
+    const currentLink = sessionStorage.getItem("activeLink") || "dashboard";
+    const [activeLink, setActiveLink] = useState(currentLink);
 
     const handleNavClick = (link) => {
         setActiveLink(link);
+        sessionStorage.setItem("activeLink", link);
     };
+
+    useEffect(() => {
+        setActiveLink(sessionStorage.getItem("activeLink") || "dashboard");
+    });
 
     const userRole = localStorage.getItem("userRole") === "admin" ? true : false;
 
