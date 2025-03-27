@@ -1,6 +1,6 @@
 import { Layout, Table, Button, Space, Typography, Card } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import styles from "./Admin.module.css";
+import styles from "./Admin.module.scss";
 
 const { Content } = Layout;
 const { Title } = Typography;

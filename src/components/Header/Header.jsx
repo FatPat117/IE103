@@ -1,5 +1,5 @@
 import classNames from "classnames/bind";
-import styles from "../Header/Header.module.css";
+import styles from "./Header.module.scss";
 
 import React, { useState } from "react";
 import logo from "../../assets/image/logo.png";

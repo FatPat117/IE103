@@ -32,7 +32,6 @@ function App() {
     if (!userRole && !isLoginPage) {
         return <Navigate to="/login" replace />;
     }
-
     return (
         <>
             {!isLoginPage && !isAdminPage && <Header />}

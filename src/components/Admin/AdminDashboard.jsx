@@ -1,6 +1,6 @@
 import { Layout, Card, Row, Col } from "antd";
 import { UserOutlined, BookOutlined, BarChartOutlined } from "@ant-design/icons";
-import styles from "./Admin.module.css";
+import styles from "./Admin.module.scss";
 
 const { Content } = Layout;
 
