@@ -22,7 +22,7 @@ function Login() {
         let user = Object.values(accounts).find((acc) => acc.id === studentId && acc.password === password);
 
         if (user) {
-            localStorage.setItem("userRole", user.role);
+            sessionStorage.setItem("userRole", user.role);
             navigate("/dashboard");
             window.location.reload();
         } else {

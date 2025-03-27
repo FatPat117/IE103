@@ -1,7 +1,7 @@
 import classNames from "classnames/bind";
 import styles from "./Header.module.scss";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../../assets/image/logo.png";
 import avatar from "../../assets/image/avatar.jpg";
 
@@ -13,13 +13,19 @@ import { faSignOut, faUser } from "@fortawesome/free-solid-svg-icons";
 const cx = classNames.bind(styles);
 
 function Header() {
-    const [activeLink, setActiveLink] = useState("dashboard");
+    const currentLink = sessionStorage.getItem("activeLink") || "dashboard";
+    const [activeLink, setActiveLink] = useState(currentLink);
 
     const handleNavClick = (link) => {
         setActiveLink(link);
+        sessionStorage.setItem("activeLink", link);
     };
 
-    const userRole = localStorage.getItem("userRole") === "admin" ? true : false;
+    useEffect(() => {
+        setActiveLink(sessionStorage.getItem("activeLink") || "dashboard");
+    });
+
+    const userRole = sessionStorage.getItem("userRole") === "admin" ? true : false;
 
     return (
         <header className={cx("header")}>
@@ -100,7 +106,7 @@ function Header() {
                                         <button
                                             className={cx("action-btn")}
                                             onClick={() => {
-                                                localStorage.removeItem("userRole");
+                                                sessionStorage.removeItem("userRole");
                                             }}
                                         >
                                             <span className={cx("icon")}>

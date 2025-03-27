@@ -18,18 +18,16 @@ import AdminRoute from "./routes/AdminRoute";
 
 function App() {
     const location = useLocation();
-    const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
+    const [userRole, setUserRole] = useState(sessionStorage.getItem("userRole"));
 
     useEffect(() => {
-        setUserRole(localStorage.getItem("userRole"));
+        setUserRole(sessionStorage.getItem("userRole"));
     }, [location.pathname]);
-
-    console.log("userRole:", userRole);
 
     const isLoginPage = location.pathname === "/login";
     const isAdminPage = location.pathname.startsWith("/admin");
 
-    if (!userRole && !isLoginPage) {
+    if (userRole === null && !isLoginPage) {
         return <Navigate to="/login" replace />;
     }
     return (
