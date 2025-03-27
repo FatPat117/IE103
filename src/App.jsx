@@ -16,35 +16,29 @@ import Schedule from "./pages/Schedule/Schedule";
 import AdminRoute from "./routes/AdminRoute";
 
 function App() {
-        const location = useLocation();
-        const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
+    const location = useLocation();
+    const [userRole, setUserRole] = useState(sessionStorage.getItem("userRole"));
 
-        useEffect(() => {
-                setUserRole(localStorage.getItem("userRole"));
-        }, [location.pathname]);
+    useEffect(() => {
+        setUserRole(sessionStorage.getItem("userRole"));
+    }, [location.pathname]);
 
         const isLoginPage = location.pathname === "/login";
         const isAdminPage = location.pathname.startsWith("/admin");
 
-        if (!userRole && location.pathname !== "/login") {
-                return <Navigate to="/login" replace />;
-        }
-
-        return (
-                <>
-                        {!isLoginPage && !isAdminPage && <Header />}
-                        <Routes>
-                                <Route path="/" element={userRole ? <Home /> : <Navigate to="/login" />} />
-                                <Route path="/dashboard" element={userRole ? <Home /> : <Navigate to="/login" />} />
-                                <Route
-                                        path="/dang-ky-hoc-phan"
-                                        element={userRole ? <ClassList /> : <Navigate to="/login" />}
-                                />
-                                <Route
-                                        path="/danh-sach-lop"
-                                        element={userRole ? <Schedule /> : <Navigate to="/login" />}
-                                />
-                                <Route path="/login" element={<Login />} />
+    if (userRole === null && !isLoginPage) {
+        return <Navigate to="/login" replace />;
+    }
+    return (
+        <>
+            {!isLoginPage && !isAdminPage && <Header />}
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/dashboard" element={<Home />} />
+                <Route path="/dang-ky-hoc-phan" element={<ClassList />} />
+                <Route path="/xac-nhan-hoc-phan" element={<Confirmed />} />
+                <Route path="/danh-sach-lop" element={<Schedule />} />
+                <Route path="/login" element={<Login />} />
 
                                 <Route element={<AdminRoute />}>
                                         <Route
