@@ -1,37 +1,33 @@
-import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
-import Footer from "./components/Footer/Footer";
-import Header from "./components/Header/Header";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import Students from "./components/Admin/Student";
 import Subjects from "./components/Admin/Subjects";
+import Footer from "./components/Footer/Footer";
+import Header from "./components/Header/Header";
 
 import ClassList from "./pages/ClassList/ClassList";
 import Home from "./pages/Home/Home";
-import Schedule from "./pages/Schedule/Schedule";
 import Login from "./pages/Login/Login";
-import Confirmed from "./pages/ConfirmedList/Confirmed";
+import Schedule from "./pages/Schedule/Schedule";
 
 import AdminRoute from "./routes/AdminRoute";
 
 function App() {
         const location = useLocation();
-        const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
+        const [userRole, setUserRole] = useState(sessionStorage.getItem("userRole"));
 
         useEffect(() => {
-                setUserRole(localStorage.getItem("userRole"));
+                setUserRole(sessionStorage.getItem("userRole"));
         }, [location.pathname]);
-
-        console.log("userRole:", userRole);
 
         const isLoginPage = location.pathname === "/login";
         const isAdminPage = location.pathname.startsWith("/admin");
 
-        if (!userRole && !isLoginPage) {
+        if (userRole === null && !isLoginPage) {
                 return <Navigate to="/login" replace />;
         }
-
         return (
                 <>
                         {!isLoginPage && !isAdminPage && <Header />}
@@ -44,9 +40,24 @@ function App() {
                                 <Route path="/login" element={<Login />} />
 
                                 <Route element={<AdminRoute />}>
-                                        <Route path="/admin" element={<AdminDashboard />} />
-                                        <Route path="/admin/subjects" element={<Subjects />} />
-                                        <Route path="/admin/students" element={<Students />} />
+                                        <Route
+                                                path="/admin"
+                                                element={
+                                                        userRole === "admin" ? (
+                                                                <AdminDashboard />
+                                                        ) : (
+                                                                <Navigate to="/login" />
+                                                        )
+                                                }
+                                        />
+                                        <Route
+                                                path="/admin/subjects"
+                                                element={userRole === "admin" ? <Subjects /> : <Navigate to="/login" />}
+                                        />
+                                        <Route
+                                                path="/admin/students"
+                                                element={userRole === "admin" ? <Students /> : <Navigate to="/login" />}
+                                        />
                                 </Route>
                         </Routes>
                         {!isLoginPage && !isAdminPage && <Footer />}

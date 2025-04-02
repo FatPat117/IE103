@@ -6,7 +6,7 @@ const { Header, Content, Sider } = Layout;
 
 const Admin = () => {
     const navigate = useNavigate();
-    const userRole = localStorage.getItem("userRole");
+    const userRole = sessionStorage.getItem("userRole");
 
     const handleBack = () => {
         navigate("/");
