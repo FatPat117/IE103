@@ -90,6 +90,7 @@ video {
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
+    font-weight: 400;
 }
 strong {
     font-weight: bold;
@@ -155,8 +156,9 @@ html {
 }
 
 body {
-    font-size: 1.6rem;
-    font-family: "ProximaNova", sans-serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    font-family: "M PLUS Rounded 1c", sans-serif;
     background: var(--background-color);
 }
 
@@ -167,7 +169,8 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: "ProximaNova", sans-serif;
+    font-family: "M PLUS Rounded 1c", sans-serif;
+    font-weight: 800;
 }
 
 input,
@@ -199,28 +202,46 @@ a {
     text-decoration: none;
 }
 
-@font-face {
-    font-family: ProximaNova;
-    src: url("/src/assets/fonts/Proxima-Nova-Regular.woff2");
+.m-plus-rounded-1c-thin {
+    font-family: "M PLUS Rounded 1c", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+}
+
+.m-plus-rounded-1c-light {
+    font-family: "M PLUS Rounded 1c", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.m-plus-rounded-1c-regular {
+    font-family: "M PLUS Rounded 1c", sans-serif;
     font-weight: 400;
+    font-style: normal;
 }
 
-@font-face {
-    font-family: ProximaNova;
-    src: url("/src/assets/fonts/ProximaNova-Semibold.woff2");
-    font-weight: 600;
+.m-plus-rounded-1c-medium {
+    font-family: "M PLUS Rounded 1c", sans-serif;
+    font-weight: 500;
+    font-style: normal;
 }
 
-@font-face {
-    font-family: ProximaNova;
-    src: url("/src/assets/fonts/Proxima-Nova-Bold.woff");
+.m-plus-rounded-1c-bold {
+    font-family: "M PLUS Rounded 1c", sans-serif;
     font-weight: 700;
+    font-style: normal;
 }
 
-@font-face {
-    font-family: SofiaPro;
-    src: url("/src/assets/fonts/sofiapro-bold.woff");
-    font-weight: 700;
+.m-plus-rounded-1c-extrabold {
+    font-family: "M PLUS Rounded 1c", sans-serif;
+    font-weight: 800;
+    font-style: normal;
+}
+
+.m-plus-rounded-1c-black {
+    font-family: "M PLUS Rounded 1c", sans-serif;
+    font-weight: 900;
+    font-style: normal;
 }
 
 .btn {

@@ -37,7 +37,7 @@
     text-decoration: none;
     color: var(--text-color);
     font-size: 1.6rem;
-    font-weight: 700;
+    font-weight: 900;
     padding: 10px 15px;
     transition: all 0.3s ease-in-out;
     border: 2px solid transparent;
@@ -87,6 +87,7 @@
 
 .user__name {
     color: var(--thin-text-color);
+    font-weight: 500;
 }
 
 .user__avatar {
@@ -127,4 +128,5 @@
 
 .title {
     font-size: 1.4rem;
+    font-weight: 500;
 }

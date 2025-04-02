@@ -1,7 +1,7 @@
 import classNames from "classnames/bind";
-import styles from "../Header/Header.module.css";
+import styles from "./Header.module.scss";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../assets/image/logo.png";
 import avatar from "../../assets/image/avatar.jpg";
 
@@ -13,11 +13,19 @@ import { faSignOut, faUser } from "@fortawesome/free-solid-svg-icons";
 const cx = classNames.bind(styles);
 
 function Header() {
-    const [activeLink, setActiveLink] = useState("dashboard");
+    const currentLink = sessionStorage.getItem("activeLink") || "dashboard";
+    const [activeLink, setActiveLink] = useState(currentLink);
 
     const handleNavClick = (link) => {
         setActiveLink(link);
+        sessionStorage.setItem("activeLink", link);
     };
+
+    useEffect(() => {
+        setActiveLink(sessionStorage.getItem("activeLink") || "dashboard");
+    });
+
+    const userRole = localStorage.getItem("userRole") === "admin" ? true : false;
 
     return (
         <header className={cx("header")}>
@@ -25,7 +33,7 @@ function Header() {
                 <div className={cx("header__content")}>
                     {/* Logo */}
                     <div className={cx("logo")}>
-                        <Link to="">
+                        <Link to="" onClick={() => handleNavClick("dashboard")}>
                             <img src={logo} alt="logo" className={cx("logo__img")} />
                         </Link>
                     </div>
@@ -83,8 +91,24 @@ function Header() {
                             placement="bottom-end"
                             render={(attrs) => (
                                 <div className={cx("wrapper")} tabIndex="-1" {...attrs}>
+                                    {userRole ? (
+                                        <Link to="/admin">
+                                            <button className={cx("action-btn")}>
+                                                <span className={cx("icon")}>
+                                                    <FontAwesomeIcon icon={faUser} />
+                                                </span>
+                                                <span className={cx("title")}>Admin Dashboard</span>
+                                            </button>
+                                        </Link>
+                                    ) : null}
+
                                     <Link to="/login">
-                                        <button className={cx("action-btn")}>
+                                        <button
+                                            className={cx("action-btn")}
+                                            onClick={() => {
+                                                localStorage.removeItem("userRole");
+                                            }}
+                                        >
                                             <span className={cx("icon")}>
                                                 <FontAwesomeIcon icon={faSignOut} />
                                             </span>
