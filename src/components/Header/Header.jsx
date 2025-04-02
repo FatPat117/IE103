@@ -1,22 +1,19 @@
 import classNames from "classnames/bind";
 import styles from "./Header.module.scss";
 
-import React, { useEffect, useState } from "react";
 import React, { useState, useEffect } from "react";
+
 import logo from "../../assets/image/logo.png";
 import avatar from "../../assets/image/avatar.jpg";
-import logo from "../../assets/image/logo.png";
 
-import { faSignOut } from "@fortawesome/free-solid-svg-icons";
+import { faSignOut, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Tippy from "@tippyjs/react/headless";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 
 function Header() {
-    const currentLink = sessionStorage.getItem("activeLink") || "dashboard";
-    const [activeLink, setActiveLink] = useState(currentLink);
     const currentLink = sessionStorage.getItem("activeLink") || "dashboard";
     const [activeLink, setActiveLink] = useState(currentLink);
 
@@ -31,16 +28,16 @@ function Header() {
 
     const userRole = sessionStorage.getItem("userRole") === "admin" ? true : false;
 
-        return (
-                <header className={cx("header")}>
-                        <div className={cx("container")}>
-                                <div className={cx("header__content")}>
-                                        {/* Logo */}
-                                        <div className={cx("logo")}>
-                                                <Link to="">
-                                                        <img src={logo} alt="logo" className={cx("logo__img")} />
-                                                </Link>
-                                        </div>
+    return (
+        <header className={cx("header")}>
+            <div className={cx("container")}>
+                <div className={cx("header__content")}>
+                    {/* Logo */}
+                    <div className={cx("logo")}>
+                        <Link to="">
+                            <img src={logo} alt="logo" className={cx("logo__img")} />
+                        </Link>
+                    </div>
 
                     {/* Navigation */}
                     <nav className={cx("navbar")}>

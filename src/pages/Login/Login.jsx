@@ -1,7 +1,8 @@
 import classNames from "classnames/bind";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo_header from "../../assets/image/logo_header.png";
+import styles from "../Login/Login.module.css";
 import { loginAPI } from "../../services/api.service";
 
 const cx = classNames.bind(styles);
@@ -29,36 +30,36 @@ function Login() {
         }
     };
 
-        return (
-                <div className={cx("wrapper")}>
-                        <div className={cx("login-container")}>
-                                <div className={cx("login-box")}>
-                                        <div className={cx("login-logo")}>
-                                                <img src={logo_header} alt="Logo UIT" className={cx("logo")} />
-                                        </div>
-                                        <form onSubmit={handleLogin}>
-                                                <input
-                                                        type="text"
-                                                        placeholder="Mã số sinh viên"
-                                                        required
-                                                        value={studentId}
-                                                        onChange={(e) => setStudentId(e.target.value)}
-                                                />
-                                                <input
-                                                        type="password"
-                                                        placeholder="Mật khẩu"
-                                                        required
-                                                        value={password}
-                                                        onChange={(e) => setPassword(e.target.value)}
-                                                />
-                                                <button className={cx("login-btn")} type="submit">
-                                                        Đăng nhập
-                                                </button>
-                                        </form>
-                                </div>
-                        </div>
+    return (
+        <div className={cx("wrapper")}>
+            <div className={cx("login-container")}>
+                <div className={cx("login-box")}>
+                    <div className={cx("login-logo")}>
+                        <img src={logo_header} alt="Logo UIT" className={cx("logo")} />
+                    </div>
+                    <form onSubmit={handleLogin}>
+                        <input
+                            type="text"
+                            placeholder="Mã số sinh viên"
+                            required
+                            value={studentId}
+                            onChange={(e) => setStudentId(e.target.value)}
+                        />
+                        <input
+                            type="password"
+                            placeholder="Mật khẩu"
+                            required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <button className={cx("login-btn")} type="submit">
+                            Đăng nhập
+                        </button>
+                    </form>
                 </div>
-        );
+            </div>
+        </div>
+    );
 }
 
 export default Login;
