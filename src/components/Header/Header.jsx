@@ -1,6 +1,7 @@
 import classNames from "classnames/bind";
 import styles from "./Header.module.scss";
 
+import React, { useEffect, useState } from "react";
 import React, { useState, useEffect } from "react";
 import logo from "../../assets/image/logo.png";
 import avatar from "../../assets/image/avatar.jpg";
@@ -14,6 +15,8 @@ import { Link, useNavigate } from "react-router-dom";
 const cx = classNames.bind(styles);
 
 function Header() {
+    const currentLink = sessionStorage.getItem("activeLink") || "dashboard";
+    const [activeLink, setActiveLink] = useState(currentLink);
     const currentLink = sessionStorage.getItem("activeLink") || "dashboard";
     const [activeLink, setActiveLink] = useState(currentLink);
 
