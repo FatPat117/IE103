@@ -1,8 +1,9 @@
+import classNames from "classnames/bind";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import classNames from "classnames/bind";
-import styles from "../Login/Login.module.css";
 import logo_header from "../../assets/image/logo_header.png";
+import styles from "../Login/Login.module.css";
+import { loginAPI } from "../../services/api.service";
 
 const cx = classNames.bind(styles);
 
@@ -11,22 +12,25 @@ function Login() {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
 
-        const accounts = {
-            admin: { id: "admin", password: "admin123", role: "admin" },
-            student: { id: "SV001", password: "student123", role: "student" },
-        };
+        try {
+            const res = await loginAPI(studentId, password, true);
 
-        let user = Object.values(accounts).find((acc) => acc.id === studentId && acc.password === password);
+            if (res) {
+                alert("Đăng nhập thành công!");
+                console.log(res);
 
-        if (user) {
-            localStorage.setItem("userRole", user.role);
-            navigate("/dashboard");
-            window.location.reload();
-        } else {
-            alert("Mã số sinh viên hoặc mật khẩu không đúng!");
+                localStorage.setItem("accessToken", res.accesstoken);
+                localStorage.setItem("refreshToken", res.refreshtoken);
+                navigate("/dashboard");
+                window.location.reload();
+            } else {
+                alert("Mã số sinh viên hoặc mật khẩu không đúng!");
+            }
+        } catch (error) {
+            alert("Lỗi đăng nhập: " + error.message);
         }
     };
 

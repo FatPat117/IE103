@@ -1,14 +1,15 @@
 import classNames from "classnames/bind";
 import styles from "./Header.module.scss";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+
 import logo from "../../assets/image/logo.png";
 import avatar from "../../assets/image/avatar.jpg";
 
-import { Link } from "react-router-dom";
-import Tippy from "@tippyjs/react/headless";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOut, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Tippy from "@tippyjs/react/headless";
+import { Link } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 
@@ -25,7 +26,7 @@ function Header() {
         setActiveLink(sessionStorage.getItem("activeLink") || "dashboard");
     });
 
-    const userRole = localStorage.getItem("userRole") === "admin" ? true : false;
+    const userRole = sessionStorage.getItem("userRole") === "admin" ? true : false;
 
     return (
         <header className={cx("header")}>
@@ -33,7 +34,7 @@ function Header() {
                 <div className={cx("header__content")}>
                     {/* Logo */}
                     <div className={cx("logo")}>
-                        <Link to="" onClick={() => handleNavClick("dashboard")}>
+                        <Link to="">
                             <img src={logo} alt="logo" className={cx("logo__img")} />
                         </Link>
                     </div>
@@ -106,7 +107,7 @@ function Header() {
                                         <button
                                             className={cx("action-btn")}
                                             onClick={() => {
-                                                localStorage.removeItem("userRole");
+                                                sessionStorage.removeItem("userRole");
                                             }}
                                         >
                                             <span className={cx("icon")}>

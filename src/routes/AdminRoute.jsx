@@ -2,7 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import Admin from "../components/Admin/Admin";
 
 const AdminRoute = () => {
-    const userRole = localStorage.getItem("userRole");
+    const userRole = sessionStorage.getItem("userRole");
 
     return userRole === "admin" ? (
         <Admin>
