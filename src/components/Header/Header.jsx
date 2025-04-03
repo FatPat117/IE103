@@ -2,6 +2,7 @@ import classNames from "classnames/bind";
 import styles from "./Header.module.scss";
 
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import logo from "../../assets/image/logo.png";
 import avatar from "../../assets/image/avatar.jpg";
@@ -10,17 +11,59 @@ import { faSignOut, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Tippy from "@tippyjs/react/headless";
 import { Link } from "react-router-dom";
+import { getUserAPI, logoutAPI } from "~/services/api.service";
 
 const cx = classNames.bind(styles);
 
 function Header() {
     const currentLink = sessionStorage.getItem("activeLink") || "dashboard";
     const [activeLink, setActiveLink] = useState(currentLink);
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+            const user = JSON.parse(localStorage.getItem("user"));
+
+            if (!user || !user.email) {
+                alert("Không tìm thấy thông tin người dùng!");
+                return;
+            }
+
+            const res = await logoutAPI(user.email); // Gọi API logout với email lấy từ localStorage
+
+            if (res) {
+                alert("Đăng xuất thành công!");
+                console.log(res);
+
+                // Xóa thông tin người dùng khỏi localStorage
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("user");
+
+                // Chuyển hướng về trang login
+                navigate("/login");
+            }
+        } catch (error) {
+            alert("Lỗi đăng xuất: " + error.message);
+        }
+    };
 
     const handleNavClick = (link) => {
         setActiveLink(link);
         sessionStorage.setItem("activeLink", link);
     };
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                getUserAPI();
+            } catch (error) {
+                console.error("Không thể lấy thông tin người dùng:", error.message);
+            }
+        };
+
+        fetchUser();
+    }, []);
 
     useEffect(() => {
         setActiveLink(sessionStorage.getItem("activeLink") || "dashboard");
@@ -113,7 +156,9 @@ function Header() {
                                             <span className={cx("icon")}>
                                                 <FontAwesomeIcon icon={faSignOut} />
                                             </span>
-                                            <span className={cx("title")}>Thoát</span>
+                                            <span className={cx("title")} onClick={handleLogout}>
+                                                Thoát
+                                            </span>
                                         </button>
                                     </Link>
                                 </div>
