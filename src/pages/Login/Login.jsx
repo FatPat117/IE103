@@ -1,8 +1,8 @@
+import classNames from "classnames/bind";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import classNames from "classnames/bind";
-import styles from "../Login/Login.module.css";
 import logo_header from "../../assets/image/logo_header.png";
+import styles from "../Login/Login.module.css";
 import { loginAPI } from "../../services/api.service";
 
 const cx = classNames.bind(styles);
@@ -18,8 +18,12 @@ function Login() {
         try {
             const res = await loginAPI(studentId, password, true);
 
-            if (res.accesstoken) {
+            if (res) {
                 alert("Đăng nhập thành công!");
+                console.log(res);
+
+                localStorage.setItem("accessToken", res.accesstoken);
+                localStorage.setItem("refreshToken", res.refreshtoken);
                 navigate("/dashboard");
                 window.location.reload();
             } else {
