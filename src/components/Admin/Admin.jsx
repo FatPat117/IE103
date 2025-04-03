@@ -44,7 +44,7 @@ const Admin = () => {
                 >
                     <div style={{ width: "100px" }}></div>
                     <h1>Admin Dashboard</h1>
-                    {userRole === "admin" && (
+                    {userRole === "ADMIN" && (
                         <Button type="primary" onClick={handleBack}>
                             Back to Dashboard
                         </Button>

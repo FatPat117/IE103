@@ -22,23 +22,23 @@ function Header() {
 
     const handleLogout = async () => {
         try {
-            const user = JSON.parse(localStorage.getItem("user"));
+            const user = JSON.parse(sessionStorage.getItem("user"));
 
             if (!user || !user.email) {
                 alert("Không tìm thấy thông tin người dùng!");
                 return;
             }
 
-            const res = await logoutAPI(user.email); // Gọi API logout với email lấy từ localStorage
+            const res = await logoutAPI(user.email); // Gọi API logout với email lấy từ sessionStorage
 
             if (res) {
                 alert("Đăng xuất thành công!");
                 console.log(res);
 
-                // Xóa thông tin người dùng khỏi localStorage
-                localStorage.removeItem("accessToken");
-                localStorage.removeItem("refreshToken");
-                localStorage.removeItem("user");
+                // Xóa thông tin người dùng khỏi sessionStorage
+                sessionStorage.removeItem("accessToken");
+                sessionStorage.removeItem("refreshToken");
+                sessionStorage.removeItem("user");
 
                 // Chuyển hướng về trang login
                 navigate("/login");
@@ -69,7 +69,7 @@ function Header() {
         setActiveLink(sessionStorage.getItem("activeLink") || "dashboard");
     });
 
-    const userRole = sessionStorage.getItem("userRole") === "admin" ? true : false;
+    const userRole = sessionStorage.getItem("userRole") === "ADMIN" ? true : false;
 
     return (
         <header className={cx("header")}>
@@ -146,21 +146,19 @@ function Header() {
                                         </Link>
                                     ) : null}
 
-                                    <Link to="/login">
-                                        <button
-                                            className={cx("action-btn")}
-                                            onClick={() => {
-                                                sessionStorage.removeItem("userRole");
-                                            }}
-                                        >
-                                            <span className={cx("icon")}>
-                                                <FontAwesomeIcon icon={faSignOut} />
-                                            </span>
-                                            <span className={cx("title")} onClick={handleLogout}>
-                                                Thoát
-                                            </span>
-                                        </button>
-                                    </Link>
+                                    <button
+                                        className={cx("action-btn")}
+                                        onClick={() => {
+                                            sessionStorage.removeItem("userRole");
+                                        }}
+                                    >
+                                        <span className={cx("icon")}>
+                                            <FontAwesomeIcon icon={faSignOut} />
+                                        </span>
+                                        <span className={cx("title")} onClick={handleLogout}>
+                                            Thoát
+                                        </span>
+                                    </button>
                                 </div>
                             )}
                         >

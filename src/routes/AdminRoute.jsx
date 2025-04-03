@@ -4,7 +4,7 @@ import Admin from "../components/Admin/Admin";
 const AdminRoute = () => {
     const userRole = sessionStorage.getItem("userRole");
 
-    return userRole === "admin" ? (
+    return userRole === "ADMIN" ? (
         <Admin>
             <Outlet />
         </Admin>

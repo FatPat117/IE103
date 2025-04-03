@@ -18,11 +18,14 @@ export const loginAPI = async (username, password, rememberMe = "false") => {
             }
         );
 
-        // Lưu token vào localStorage nếu đăng nhập thành công
+        // Lưu token vào sessionStorage nếu đăng nhập thành công
         if (response.data.tokens && response.data.tokens.accessToken && response.data.tokens.refreshToken) {
-            localStorage.setItem("accessToken", response.data.tokens.accessToken);
-            localStorage.setItem("refreshToken", response.data.tokens.refreshToken);
-            sessionStorage.setItem("userRole", "student");
+            sessionStorage.setItem("accessToken", response.data.tokens.accessToken);
+            sessionStorage.setItem("refreshToken", response.data.tokens.refreshToken);
+            sessionStorage.setItem("userRole", response.data.role);
+
+            console.log("đăng nhập đc r");
+
             return response.data;
         }
 
@@ -42,7 +45,7 @@ export const loginAPI = async (username, password, rememberMe = "false") => {
 // Hàm lấy thông tin người dùng
 export const getUserAPI = async () => {
     try {
-        const accessToken = localStorage.getItem("accessToken");
+        const accessToken = sessionStorage.getItem("accessToken");
 
         if (!accessToken) {
             throw new Error("Không có access token.");
@@ -55,15 +58,15 @@ export const getUserAPI = async () => {
             withCredentials: true,
         });
 
-        console.log("Thông tin người dùng:", response);
-
         if (response.data) {
-            localStorage.setItem(
+            sessionStorage.setItem(
                 "user",
                 JSON.stringify({
                     email: response.data.email,
                 })
             );
+
+            console.log("đã lấy được thông tin người dùng");
 
             return response.data;
         }
@@ -77,7 +80,7 @@ export const getUserAPI = async () => {
 
 export const logoutAPI = async (email) => {
     try {
-        const accessToken = localStorage.getItem("accessToken");
+        const accessToken = sessionStorage.getItem("accessToken");
 
         // Kiểm tra nếu không có accessToken
         if (!accessToken) {
@@ -97,9 +100,11 @@ export const logoutAPI = async (email) => {
         );
 
         if (response.status === 200) {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            localStorage.removeItem("user");
+            sessionStorage.removeItem("accessToken");
+            sessionStorage.removeItem("refreshToken");
+            sessionStorage.removeItem("user");
+
+            console.log("đã xóa thành công");
 
             return response.data;
         }

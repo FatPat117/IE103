@@ -20,8 +20,10 @@ function Login() {
 
             if (res) {
                 alert("Đăng nhập thành công!");
-                navigate("/dashboard");
-                window.location.reload();
+
+                setTimeout(() => {
+                    navigate("/dashboard");
+                }, 100);
             } else {
                 alert("Mã số sinh viên hoặc mật khẩu không đúng!");
             }

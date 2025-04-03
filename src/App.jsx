@@ -16,42 +16,44 @@ import AdminRoute from "./routes/AdminRoute";
 import Confirmed from "./pages/ConfirmedList/Confirmed";
 
 function App() {
-        const location = useLocation();
-        const [userRole, setUserRole] = useState(sessionStorage.getItem("userRole"));
+    const location = useLocation();
+    const [userRole, setUserRole] = useState(sessionStorage.getItem("userRole"));
 
-        useEffect(() => {
-                setUserRole(sessionStorage.getItem("userRole"));
-        }, [location.pathname]);
+    useEffect(() => {
+        const role = sessionStorage.getItem("userRole");
+        setUserRole(role);
+    }, [location.pathname]);
 
     const isLoginPage = location.pathname === "/login";
     const isAdminPage = location.pathname.startsWith("/admin");
 
-        if (userRole === null && !isLoginPage) {
-                return <Navigate to="/login" replace />;
-        }
-        return (
-                <>
-                        {!isLoginPage && !isAdminPage && <Header />}
-                        <Routes>
-                                <Route path="/" element={<Home />} />
-                                <Route path="/dashboard" element={<Home />} />
-                                <Route path="/dang-ky-hoc-phan" element={<ClassList />} />
-                                <Route path="/xac-nhan-hoc-phan" element={<Confirmed />} />
-                                <Route path="/danh-sach-lop" element={<Schedule />} />
-                                <Route path="/login" element={<Login />} />
+    if (!sessionStorage.getItem("userRole") && !isLoginPage) {
+        return <Navigate to="/login" replace />;
+    }
+
+    return (
+        <>
+            {!isLoginPage && !isAdminPage && <Header />}
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/dashboard" element={<Home />} />
+                <Route path="/dang-ky-hoc-phan" element={<ClassList />} />
+                <Route path="/xac-nhan-hoc-phan" element={<Confirmed />} />
+                <Route path="/danh-sach-lop" element={<Schedule />} />
+                <Route path="/login" element={<Login />} />
 
                 <Route element={<AdminRoute />}>
                     <Route
                         path="/admin"
-                        element={userRole === "admin" ? <AdminDashboard /> : <Navigate to="/login" />}
+                        element={userRole === "ADMIN" ? <AdminDashboard /> : <Navigate to="/login" />}
                     />
                     <Route
                         path="/admin/subjects"
-                        element={userRole === "admin" ? <Subjects /> : <Navigate to="/login" />}
+                        element={userRole === "ADMIN" ? <Subjects /> : <Navigate to="/login" />}
                     />
                     <Route
                         path="/admin/students"
-                        element={userRole === "admin" ? <Students /> : <Navigate to="/login" />}
+                        element={userRole === "ADMIN" ? <Students /> : <Navigate to="/login" />}
                     />
                 </Route>
             </Routes>
