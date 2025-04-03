@@ -18,8 +18,12 @@ function Login() {
         try {
             const res = await loginAPI(studentId, password, true);
 
-            if (res.accesstoken) {
+            if (res) {
                 alert("Đăng nhập thành công!");
+                console.log(res);
+
+                localStorage.setItem("accessToken", res.accesstoken);
+                localStorage.setItem("refreshToken", res.refreshtoken);
                 navigate("/dashboard");
                 window.location.reload();
             } else {

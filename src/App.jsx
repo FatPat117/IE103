@@ -12,8 +12,8 @@ import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Schedule from "./pages/Schedule/Schedule";
 
-
 import AdminRoute from "./routes/AdminRoute";
+import Confirmed from "./pages/ConfirmedList/Confirmed";
 
 function App() {
     const location = useLocation();
@@ -23,8 +23,8 @@ function App() {
         setUserRole(sessionStorage.getItem("userRole"));
     }, [location.pathname]);
 
-        const isLoginPage = location.pathname === "/login";
-        const isAdminPage = location.pathname.startsWith("/admin");
+    const isLoginPage = location.pathname === "/login";
+    const isAdminPage = location.pathname.startsWith("/admin");
 
     if (userRole === null && !isLoginPage) {
         return <Navigate to="/login" replace />;
@@ -40,30 +40,24 @@ function App() {
                 <Route path="/danh-sach-lop" element={<Schedule />} />
                 <Route path="/login" element={<Login />} />
 
-                                <Route element={<AdminRoute />}>
-                                        <Route
-                                                path="/admin"
-                                                element={
-                                                        userRole === "admin" ? (
-                                                                <AdminDashboard />
-                                                        ) : (
-                                                                <Navigate to="/login" />
-                                                        )
-                                                }
-                                        />
-                                        <Route
-                                                path="/admin/subjects"
-                                                element={userRole === "admin" ? <Subjects /> : <Navigate to="/login" />}
-                                        />
-                                        <Route
-                                                path="/admin/students"
-                                                element={userRole === "admin" ? <Students /> : <Navigate to="/login" />}
-                                        />
-                                </Route>
-                        </Routes>
-                        {!isLoginPage && !isAdminPage && <Footer />}
-                </>
-        );
+                <Route element={<AdminRoute />}>
+                    <Route
+                        path="/admin"
+                        element={userRole === "admin" ? <AdminDashboard /> : <Navigate to="/login" />}
+                    />
+                    <Route
+                        path="/admin/subjects"
+                        element={userRole === "admin" ? <Subjects /> : <Navigate to="/login" />}
+                    />
+                    <Route
+                        path="/admin/students"
+                        element={userRole === "admin" ? <Students /> : <Navigate to="/login" />}
+                    />
+                </Route>
+            </Routes>
+            {!isLoginPage && !isAdminPage && <Footer />}
+        </>
+    );
 }
 
 export default App;
