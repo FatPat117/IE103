@@ -18,11 +18,10 @@ export const loginAPI = async (username, password, rememberMe = "false") => {
             }
         );
 
-        // Lưu token vào localStorage nếu đăng nhập thành công
         if (response.data.tokens && response.data.tokens.accessToken && response.data.tokens.refreshToken) {
-            localStorage.setItem("accessToken", response.data.tokens.accessToken);
-            localStorage.setItem("refreshToken", response.data.tokens.refreshToken);
-            sessionStorage.setItem("userRole", "student");
+            sessionStorage.setItem("accessToken", response.data.tokens.accessToken);
+            sessionStorage.setItem("refreshToken", response.data.tokens.refreshToken);
+            sessionStorage.setItem("userRole", response.data.role);
             return response.data;
         }
 
@@ -39,68 +38,36 @@ export const loginAPI = async (username, password, rememberMe = "false") => {
     }
 };
 
-// Hàm lấy thông tin người dùng
+// 2. Get User Info API
 export const getUserAPI = async () => {
     try {
-        const accessToken = localStorage.getItem("accessToken");
-
-        if (!accessToken) {
-            throw new Error("Không có access token.");
-        }
-
         const response = await axios.get("/api/user", {
-            headers: {
-                Authorization: `Bearer ${accessToken}`, // Gửi access token trong header
-            },
             withCredentials: true,
         });
-
-        console.log("Thông tin người dùng:", response);
-
-        if (response.data) {
-            localStorage.setItem(
-                "user",
-                JSON.stringify({
-                    email: response.data.email,
-                })
-            );
-
-            return response.data;
-        }
-
-        throw new Error("Không thể lấy thông tin người dùng.");
+        return response.data;
     } catch (error) {
         console.error("Lỗi khi lấy thông tin người dùng:", error.message);
         throw error;
     }
 };
 
+// 3. Logout API
 export const logoutAPI = async (email) => {
     try {
-        const accessToken = localStorage.getItem("accessToken");
-
-        // Kiểm tra nếu không có accessToken
-        if (!accessToken) {
-            throw new Error("Không tìm thấy access token.");
-        }
-
+        // Gửi request logout
         const response = await axios.post(
             "/auth/logout",
             { email },
             {
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, // Lấy accessToken hiện tại
                 },
                 withCredentials: true,
             }
         );
 
         if (response.status === 200) {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            localStorage.removeItem("user");
-
             return response.data;
         }
 
@@ -108,7 +75,7 @@ export const logoutAPI = async (email) => {
     } catch (error) {
         if (error.response) {
             if (error.response.status === 401) {
-                throw new Error("Không tìm thấy người dùng với email cung cấp.");
+                throw new Error("Token hết hạn");
             } else if (error.response.status === 400) {
                 throw new Error("Lỗi yêu cầu.");
             }

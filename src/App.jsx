@@ -20,15 +20,17 @@ function App() {
     const [userRole, setUserRole] = useState(sessionStorage.getItem("userRole"));
 
     useEffect(() => {
-        setUserRole(sessionStorage.getItem("userRole"));
+        const role = sessionStorage.getItem("userRole");
+        setUserRole(role);
     }, [location.pathname]);
 
     const isLoginPage = location.pathname === "/login";
     const isAdminPage = location.pathname.startsWith("/admin");
 
-    if (userRole === null && !isLoginPage) {
+    if (!sessionStorage.getItem("userRole") && !isLoginPage) {
         return <Navigate to="/login" replace />;
     }
+
     return (
         <>
             {!isLoginPage && !isAdminPage && <Header />}
@@ -43,15 +45,15 @@ function App() {
                 <Route element={<AdminRoute />}>
                     <Route
                         path="/admin"
-                        element={userRole === "admin" ? <AdminDashboard /> : <Navigate to="/login" />}
+                        element={userRole === "ADMIN" ? <AdminDashboard /> : <Navigate to="/login" />}
                     />
                     <Route
                         path="/admin/subjects"
-                        element={userRole === "admin" ? <Subjects /> : <Navigate to="/login" />}
+                        element={userRole === "ADMIN" ? <Subjects /> : <Navigate to="/login" />}
                     />
                     <Route
                         path="/admin/students"
-                        element={userRole === "admin" ? <Students /> : <Navigate to="/login" />}
+                        element={userRole === "ADMIN" ? <Students /> : <Navigate to="/login" />}
                     />
                 </Route>
             </Routes>
