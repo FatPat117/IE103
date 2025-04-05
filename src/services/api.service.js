@@ -41,12 +41,37 @@ export const loginAPI = async (username, password, rememberMe = "false") => {
 // 2. Get User Info API
 export const getUserAPI = async () => {
     try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) {
+            throw new Error("Không tìm thấy access token trong sessionStorage");
+        }
+
         const response = await axios.get("/api/user", {
-            withCredentials: true,
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
         });
+
         return response.data;
     } catch (error) {
-        console.error("Lỗi khi lấy thông tin người dùng:", error.message);
+        if (error.response) {
+            const { status, data } = error.response;
+            switch (status) {
+                case 400:
+                    console.error("Lỗi khi lấy user:", data.message);
+                    break;
+                case 401:
+                    console.error("Token hết hạn:", data.message);
+                    break;
+                case 404:
+                    console.error("Không tìm thấy user:", data.message);
+                    break;
+                default:
+                    console.error("Lỗi không xác định:", data.message);
+            }
+        } else {
+            console.error("Lỗi mạng hoặc không lấy được response:", error.message);
+        }
         throw error;
     }
 };
