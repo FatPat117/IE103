@@ -99,7 +99,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 10px;
-    width: 200px;
+    min-width: 200px;
     display: flex;
     flex-direction: column;
     background-color: var(--background-color);
@@ -122,11 +122,20 @@
 }
 
 .icon {
-    margin-right: 10px;
+    margin-right: 20px;
     font-size: 1.6rem;
+    width: 16px;
 }
 
 .title {
-    font-size: 1.4rem;
-    font-weight: 500;
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.user-details {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    color: var(--thick-text-color);
+    display: flex;
 }

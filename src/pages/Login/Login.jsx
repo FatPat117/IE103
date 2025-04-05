@@ -19,8 +19,6 @@ function Login() {
             const res = await loginAPI(studentId, password, true);
 
             if (res) {
-                alert("Đăng nhập thành công!");
-
                 setTimeout(() => {
                     navigate("/dashboard");
                 }, 100);

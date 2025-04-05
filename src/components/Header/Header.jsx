@@ -2,45 +2,42 @@ import classNames from "classnames/bind";
 import styles from "./Header.module.scss";
 
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import logo from "../../assets/image/logo.png";
 import avatar from "../../assets/image/avatar.jpg";
 
-import { faSignOut, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faGraduationCap, faSignOut, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Tippy from "@tippyjs/react/headless";
-import { Link } from "react-router-dom";
+
 import { getUserAPI, logoutAPI } from "~/services/api.service";
 
 const cx = classNames.bind(styles);
 
 function Header() {
-    const currentLink = sessionStorage.getItem("activeLink") || "dashboard";
-    const [activeLink, setActiveLink] = useState(currentLink);
+    const [activeLink, setActiveLink] = useState(() => sessionStorage.getItem("activeLink") || "dashboard");
+    const [userDetails, setUserDetails] = useState(null);
     const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
             const user = JSON.parse(sessionStorage.getItem("user"));
+            console.log(user.email);
 
             if (!user || !user.email) {
                 alert("Không tìm thấy thông tin người dùng!");
                 return;
             }
 
-            const res = await logoutAPI(user.email); // Gọi API logout với email lấy từ sessionStorage
+            const res = await logoutAPI(user.email);
 
             if (res) {
-                alert("Đăng xuất thành công!");
-                console.log(res);
-
-                // Xóa thông tin người dùng khỏi sessionStorage
                 sessionStorage.removeItem("accessToken");
                 sessionStorage.removeItem("refreshToken");
                 sessionStorage.removeItem("user");
-
-                // Chuyển hướng về trang login
+                sessionStorage.removeItem("userRole");
+                sessionStorage.removeItem("activeLink");
                 navigate("/login");
             }
         } catch (error) {
@@ -53,23 +50,33 @@ function Header() {
         sessionStorage.setItem("activeLink", link);
     };
 
+    // Lấy thông tin người dùng khi component mount
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                getUserAPI();
-            } catch (error) {
-                console.error("Không thể lấy thông tin người dùng:", error.message);
+        const loadUser = async () => {
+            const cachedUser = sessionStorage.getItem("user");
+
+            if (cachedUser) {
+                // Đã có user trong sessionStorage
+                setUserDetails(JSON.parse(cachedUser));
+            } else {
+                // Gọi API để lấy user
+                try {
+                    const res = await getUserAPI();
+                    if (res) {
+                        sessionStorage.setItem("user", JSON.stringify(res));
+                        setUserDetails(res);
+                        console.log(res);
+                    }
+                } catch (error) {
+                    console.error("Lỗi khi lấy thông tin người dùng:", error.message);
+                }
             }
         };
 
-        fetchUser();
+        loadUser();
     }, []);
 
-    useEffect(() => {
-        setActiveLink(sessionStorage.getItem("activeLink") || "dashboard");
-    });
-
-    const userRole = sessionStorage.getItem("userRole") === "ADMIN" ? true : false;
+    const isAdmin = sessionStorage.getItem("userRole") === "ADMIN";
 
     return (
         <header className={cx("header")}>
@@ -94,7 +101,6 @@ function Header() {
                                     Dashboard
                                 </Link>
                             </li>
-
                             <li className={cx("navbar__item")}>
                                 <Link
                                     to="/dang-ky-hoc-phan"
@@ -113,7 +119,6 @@ function Header() {
                                     Xác nhận đăng ký học phần
                                 </Link>
                             </li>
-
                             <li className={cx("navbar__item")}>
                                 <Link
                                     to="/danh-sach-lop"
@@ -135,7 +140,7 @@ function Header() {
                             placement="bottom-end"
                             render={(attrs) => (
                                 <div className={cx("wrapper")} tabIndex="-1" {...attrs}>
-                                    {userRole ? (
+                                    {isAdmin ? (
                                         <Link to="/admin">
                                             <button className={cx("action-btn")}>
                                                 <span className={cx("icon")}>
@@ -144,26 +149,44 @@ function Header() {
                                                 <span className={cx("title")}>Admin Dashboard</span>
                                             </button>
                                         </Link>
+                                    ) : userDetails ? (
+                                        <>
+                                            <div className={cx("user-details")}>
+                                                <span className={cx("icon")}>
+                                                    <FontAwesomeIcon icon={faUser} />
+                                                </span>
+                                                <span className={cx("title")}>{userDetails.ms}</span>
+                                            </div>
+                                            <div className={cx("user-details")}>
+                                                <span className={cx("icon")}>
+                                                    <FontAwesomeIcon icon={faGraduationCap} />
+                                                </span>
+                                                <span className={cx("title")}>{userDetails.ten}</span>
+                                            </div>
+                                            <div className={cx("user-details")}>
+                                                <span className={cx("icon")}>
+                                                    <FontAwesomeIcon icon={faEnvelope} />
+                                                </span>
+                                                <span className={cx("title")}>{userDetails.email}</span>
+                                            </div>
+                                        </>
                                     ) : null}
 
-                                    <button
-                                        className={cx("action-btn")}
-                                        onClick={() => {
-                                            sessionStorage.removeItem("userRole");
-                                        }}
-                                    >
+                                    <button className={cx("action-btn")} onClick={handleLogout}>
                                         <span className={cx("icon")}>
                                             <FontAwesomeIcon icon={faSignOut} />
                                         </span>
-                                        <span className={cx("title")} onClick={handleLogout}>
-                                            Thoát
-                                        </span>
+                                        <span className={cx("title")}>Thoát</span>
                                     </button>
                                 </div>
                             )}
                         >
                             <div className={cx("user_details")}>
-                                <p className={cx("user__name")}>Trần Duy Nhân</p>
+                                {userDetails ? (
+                                    <p className={cx("user__name")}>{userDetails.name}</p>
+                                ) : (
+                                    <p>Đang tải...</p>
+                                )}
                                 <img src={avatar} className={cx("user__avatar")} alt="Avatar" />
                             </div>
                         </Tippy>
