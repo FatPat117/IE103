@@ -25,7 +25,7 @@ const Admin = () => {
                     <Menu.Item key="subjects" icon={<BookOutlined />}>
                         <Link to="/admin/subjects">Quản lý môn học</Link>
                     </Menu.Item>
-                    <Menu.Item key="students" icon={<UserOutlined />}>
+                    <Menu.Item key="user" icon={<UserOutlined />}>
                         <Link to="/admin/students">Quản lý tài khoản sinh viên</Link>
                     </Menu.Item>
                 </Menu>
