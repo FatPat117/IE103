@@ -23,7 +23,6 @@ function Header() {
     const handleLogout = async () => {
         try {
             const user = JSON.parse(sessionStorage.getItem("user"));
-            console.log(user.email);
 
             if (!user || !user.email) {
                 alert("Không tìm thấy thông tin người dùng!");
@@ -65,7 +64,6 @@ function Header() {
                     if (res) {
                         sessionStorage.setItem("user", JSON.stringify(res));
                         setUserDetails(res);
-                        console.log(res);
                     }
                 } catch (error) {
                     console.error("Lỗi khi lấy thông tin người dùng:", error.message);

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import AdminDashboard from "./components/Admin/AdminDashboard";
-import Students from "./components/Admin/Student";
+import Students from "./components/Admin/Students";
 import Subjects from "./components/Admin/Subjects";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
