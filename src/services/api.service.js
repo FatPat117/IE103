@@ -253,6 +253,32 @@ export const updateTeacherAPI = async (userId, data) => {
 };
 
 
+// Xóa sinh viên
+export const deleteUserAPI = async (userId) => {
+    try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
+
+        const response = await axios.delete(`/admin/user/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+            withCredentials: true,
+        });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        throw new Error("Xóa sinh viên không thành công.");
+    } catch (error) {
+        handleAPIError(error, {
+            401: "Token hết hạn.",
+            404: "Không tìm thấy sinh viên.",
+        });
+    }
+};
+
 // lấy ra tất cả các khoa
 export const getAllDepartmentsAPI = async () => {
     try {
@@ -273,3 +299,4 @@ export const getAllDepartmentsAPI = async () => {
         });
     }
 };
+

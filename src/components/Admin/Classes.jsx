@@ -39,7 +39,7 @@ const Classes = () => {
                     <Title level={2} className={styles.pageTitle}>
                         Quản lý Lớp học
                     </Title>
-                    <Button className={styles.addBtn} icon={<PlusOutlined />}>
+                    <Button type="primary" icon={<PlusOutlined />}>
                         Thêm lớp học
                     </Button>
                     <div className={styles.tableContainer}>

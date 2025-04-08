@@ -16,7 +16,14 @@ import {
 } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import styles from "./Admin.module.scss";
-import { getAllUsersAPI, createTeacherAPI, getUserByIdAPI, updateTeacherAPI } from "../../services/api.service";
+import {
+    getAllUsersAPI,
+    createTeacherAPI,
+    getUserByIdAPI,
+    updateTeacherAPI,
+    getAllDepartmentsAPI,
+    deleteUserAPI,
+} from "../../services/api.service";
 import moment from "moment";
 
 const { Content } = Layout;
@@ -25,6 +32,7 @@ const { Option } = Select;
 
 const Teachers = () => {
     const [teachers, setTeachers] = useState([]);
+    const [departments, setDepartments] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [form] = Form.useForm();
@@ -56,7 +64,18 @@ const Teachers = () => {
         }
     };
 
+    const fetchDepartments = async () => {
+        try {
+            const data = await getAllDepartmentsAPI();
+            setDepartments(data);
+        } catch (err) {
+            message.error("Không thể tải danh sách khoa.");
+            console.error("Lỗi khi lấy khoa:", err);
+        }
+    };
+
     useEffect(() => {
+        fetchDepartments();
         fetchTeachers();
     }, []);
 
@@ -64,7 +83,6 @@ const Teachers = () => {
         setModalOpen(true);
         try {
             const user = await getUserByIdAPI(userId);
-            console.log(user);
 
             setEditingUser(user);
             form.setFieldsValue({
@@ -90,7 +108,7 @@ const Teachers = () => {
 
         try {
             await createTeacherAPI(payload);
-            message.success("Tạo tài khoản giảng viên thành công!");
+            alert("Tạo tài khoản giảng viên thành công!");
             form.resetFields();
             setModalOpen(false);
             fetchTeachers();
@@ -115,7 +133,7 @@ const Teachers = () => {
 
         try {
             await updateTeacherAPI(editingUser.id, payload);
-            message.success("Cập nhật tài khoản giảng viên thành công!");
+            alert("Cập nhật tài khoản giảng viên thành công!");
             form.resetFields();
             setModalOpen(false);
             setEditingUser(null);
@@ -123,6 +141,25 @@ const Teachers = () => {
         } catch (err) {
             message.error("Lỗi cập nhật: " + err.message);
         }
+    };
+
+    const handleDeleteTeacher = async (userId) => {
+        Modal.confirm({
+            title: "Bạn có chắc chắn muốn xóa giảng viên này?",
+            okText: "Xóa",
+            okType: "danger",
+            cancelText: "Hủy",
+            onOk: async () => {
+                try {
+                    await deleteUserAPI(userId);
+                    alert("Xóa giảng viên thành công!");
+                    fetchTeachers();
+                } catch (err) {
+                    console.error("Lỗi khi xóa giảng viên:", err);
+                    message.error("Xóa giảng viên thất bại: " + err.message);
+                }
+            },
+        });
     };
 
     const columns = [
@@ -176,7 +213,13 @@ const Teachers = () => {
                     >
                         Sửa
                     </Button>
-                    <Button type="primary" danger icon={<DeleteOutlined />} className={styles.deleteBtn}>
+                    <Button
+                        type="primary"
+                        danger
+                        icon={<DeleteOutlined />}
+                        className={styles.deleteBtn}
+                        onClick={() => handleDeleteTeacher(record.id)}
+                    >
                         Xóa
                     </Button>
                 </Space>
@@ -272,9 +315,15 @@ const Teachers = () => {
                         <Form.Item
                             label="Mã Khoa"
                             name="makhoa"
-                            rules={[{ required: true, message: "Vui lòng nhập mã khoa" }]}
+                            rules={[{ required: true, message: "Vui lòng chọn khoa" }]}
                         >
-                            <Input />
+                            <Select placeholder="Chọn khoa">
+                                {departments.map((dept) => (
+                                    <Option key={dept.makhoa} value={dept.makhoa}>
+                                        {dept.tenkhoa} ({dept.makhoa})
+                                    </Option>
+                                ))}
+                            </Select>
                         </Form.Item>
                     </Form>
                 </Modal>

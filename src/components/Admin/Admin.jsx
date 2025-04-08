@@ -18,20 +18,32 @@ const Admin = () => {
                 <div className="logo" style={{ height: "32px", margin: "16px", color: "white", textAlign: "center" }}>
                     Admin Panel
                 </div>
-                <Menu theme="dark" mode="inline">
-                    <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
-                        <Link to="/admin">Dashboard</Link>
-                    </Menu.Item>
-                    <Menu.Item key="classes" icon={<BookOutlined />}>
-                        <Link to="/admin/classes">Lớp học</Link>
-                    </Menu.Item>
-                    <Menu.Item key="students" icon={<UserOutlined />}>
-                        <Link to="/admin/students">Sinh viên</Link>
-                    </Menu.Item>
-                    <Menu.Item key="teachers" icon={<UserOutlined />}>
-                        <Link to="/admin/teachers">Giảng viên</Link>
-                    </Menu.Item>
-                </Menu>
+                <Menu
+                    theme="dark"
+                    mode="inline"
+                    items={[
+                        {
+                            key: "dashboard",
+                            icon: <DashboardOutlined />,
+                            label: <Link to="/admin">Dashboard</Link>,
+                        },
+                        {
+                            key: "classes",
+                            icon: <BookOutlined />,
+                            label: <Link to="/admin/classes">Lớp học</Link>,
+                        },
+                        {
+                            key: "students",
+                            icon: <UserOutlined />,
+                            label: <Link to="/admin/students">Sinh viên</Link>,
+                        },
+                        {
+                            key: "teachers",
+                            icon: <UserOutlined />,
+                            label: <Link to="/admin/teachers">Giảng viên</Link>,
+                        },
+                    ]}
+                />
             </Sider>
 
             <Layout>

@@ -16,7 +16,13 @@ import {
 } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import styles from "./Admin.module.scss";
-import { getAllUsersAPI, createStudentAPI, getUserByIdAPI, updateStudentAPI } from "../../services/api.service";
+import {
+    getAllUsersAPI,
+    createStudentAPI,
+    getUserByIdAPI,
+    updateStudentAPI,
+    deleteUserAPI,
+} from "../../services/api.service";
 import moment from "moment";
 
 const { Content } = Layout;
@@ -124,11 +130,30 @@ const Students = () => {
         }
     };
 
+    const handleDeleteStudent = async (userId) => {
+        Modal.confirm({
+            title: "Xác nhận xóa",
+            content: "Bạn có chắc chắn muốn xóa sinh viên này không?",
+            okText: "Xóa",
+            okType: "danger",
+            cancelText: "Hủy",
+            onOk: async () => {
+                try {
+                    await deleteUserAPI(userId);
+                    alert("Xóa sinh viên thành công!");
+                    fetchStudents();
+                } catch (err) {
+                    message.error("Xóa sinh viên thất bại: " + (err.message || "Lỗi không xác định"));
+                }
+            },
+        });
+    };
+
     const columns = [
         {
             title: "Mã sinh viên",
-            dataIndex: "id",
-            key: "id",
+            dataIndex: "ms",
+            key: "ms",
             align: "center",
         },
         {
@@ -175,7 +200,13 @@ const Students = () => {
                     >
                         Sửa
                     </Button>
-                    <Button type="primary" danger icon={<DeleteOutlined />} className={styles.deleteBtn}>
+                    <Button
+                        type="primary"
+                        danger
+                        icon={<DeleteOutlined />}
+                        className={styles.deleteBtn}
+                        onClick={() => handleDeleteStudent(record.id)}
+                    >
                         Xóa
                     </Button>
                 </Space>
