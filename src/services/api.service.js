@@ -147,7 +147,7 @@ export const getUserByIdAPI = async (userId) => {
 };
 
 // Create new user
-export const createUserAPI = async (data) => {
+export const createStudentAPI = async (data) => {
     try {
         const accessToken = sessionStorage.getItem("accessToken");
         if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
@@ -172,6 +172,34 @@ export const createUserAPI = async (data) => {
     }
 };
 
+// create teacher API
+
+export const createTeacherAPI = async (data) => {
+    try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
+
+        const response = await axios.post("/admin/user/teacher", data, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+            withCredentials: true,
+        });
+
+        if (response.status === 201) {
+            return response.data;
+        }
+
+        throw new Error("Tạo tài khoản giáo viên không thành công.");
+    } catch (error) {
+        handleAPIError(error, {
+            401: "Token hết hạn.",
+            404: "Role hoặc khoa không tồn tại.",
+        });
+    }
+};
+
+
 // 6. Update student info
 export const updateStudentAPI = async (userId, data) => {
     try {
@@ -194,6 +222,54 @@ export const updateStudentAPI = async (userId, data) => {
         handleAPIError(error, {
             401: "Token hết hạn.",
             404: "Mã ngành hoặc khoa không tồn tại.",
+        });
+    }
+};
+
+// 7. Update teacher info
+export const updateTeacherAPI = async (userId, data) => {
+    try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
+
+        const response = await axios.put(`/admin/user/teacher/${userId}`, data, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+            withCredentials: true,
+        });
+
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        throw new Error("Cập nhật thông tin giáo viên không thành công.");
+    } catch (error) {
+        handleAPIError(error, {
+            401: "Token hết hạn.",
+            404: "Khoa ngành không tồn tại.",
+        });
+    }
+};
+
+
+// lấy ra tất cả các khoa
+export const getAllDepartmentsAPI = async () => {
+    try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
+
+        const response = await axios.get("/khoa", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        handleAPIError(error, {
+            401: "Token hết hạn.",
+            404: "Không có khoa nào được tìm thấy.",
         });
     }
 };

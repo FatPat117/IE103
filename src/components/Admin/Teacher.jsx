@@ -16,55 +16,56 @@ import {
 } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import styles from "./Admin.module.scss";
-import { getAllUsersAPI, createStudentAPI, getUserByIdAPI, updateStudentAPI } from "../../services/api.service";
+import { getAllUsersAPI, createTeacherAPI, getUserByIdAPI, updateTeacherAPI } from "../../services/api.service";
 import moment from "moment";
 
 const { Content } = Layout;
 const { Title } = Typography;
 const { Option } = Select;
 
-const Students = () => {
-    const [students, setStudents] = useState([]);
+const Teachers = () => {
+    const [teachers, setTeachers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [form] = Form.useForm();
     const [editingUser, setEditingUser] = useState(null);
 
-    const fetchStudents = async () => {
+    const fetchTeachers = async () => {
         setLoading(true);
         try {
             const data = await getAllUsersAPI();
-            const filtered = data.filter((student) => student.role === 1);
+            const filtered = data.filter((user) => user.role === 2);
 
-            const formatted = filtered.map((student) => ({
-                key: student.id,
-                id: student.id,
-                ms: student.ms,
-                name: student.name,
-                email: student.email,
-                sex: student.sex,
-                role: student.role,
-                roleName: student.role,
-                department: student.manganh,
+            const formatted = filtered.map((teacher) => ({
+                key: teacher.id,
+                id: teacher.id,
+                name: teacher.name,
+                email: teacher.email,
+                sex: teacher.sex,
+                role: teacher.role,
+                roleName: "Giảng viên",
+                department: teacher.makhoa,
             }));
 
-            setStudents(formatted);
+            setTeachers(formatted);
         } catch (err) {
-            console.error("Lỗi khi lấy danh sách sinh viên:", err);
-            message.error("Không thể tải danh sách sinh viên.");
+            console.error("Lỗi khi lấy danh sách giảng viên:", err);
+            message.error("Không thể tải danh sách giảng viên.");
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchStudents();
+        fetchTeachers();
     }, []);
 
-    const handleEditStudent = async (userId) => {
+    const handleEditTeacher = async (userId) => {
         setModalOpen(true);
         try {
             const user = await getUserByIdAPI(userId);
+            console.log(user);
+
             setEditingUser(user);
             form.setFieldsValue({
                 ...user,
@@ -75,58 +76,58 @@ const Students = () => {
         }
     };
 
-    const handleAddStudent = async (values) => {
+    const handleAddTeacher = async (values) => {
         const payload = {
             email: values.email,
             password: values.password,
             name: values.name,
             dateOfBirth: values.dateOfBirth.format("YYYY-MM-DD"),
             sex: values.sex,
+            role: 2,
             ms: values.ms,
-            role: 1,
-            manganh: values.manganh,
+            makhoa: values.makhoa,
         };
 
         try {
-            await createStudentAPI(payload);
-            alert("Tạo người dùng thành công!");
+            await createTeacherAPI(payload);
+            message.success("Tạo tài khoản giảng viên thành công!");
             form.resetFields();
             setModalOpen(false);
-            fetchStudents();
+            fetchTeachers();
         } catch (err) {
-            console.error("Lỗi khi tạo người dùng:", err.response || err.message);
-            message.error("Tạo người dùng thất bại: " + (err.response?.data?.message || err.message));
+            console.error("Lỗi khi tạo giảng viên:", err.response || err.message);
+            message.error("Tạo tài khoản thất bại: " + (err.response?.data?.message || err.message));
         }
     };
 
-    const handleUpdateStudent = async (values) => {
+    const handleUpdateTeacher = async (values) => {
         const payload = {
             email: values.email,
             name: values.name,
             dateOfBirth: values.dateOfBirth.format("YYYY-MM-DD"),
             sex: values.sex,
+            role: 2,
+            makhoa: values.makhoa,
             ms: values.ms,
-            role: 1,
-            manganh: values.manganh,
         };
 
         console.log(payload);
 
         try {
-            await updateStudentAPI(editingUser.id, payload);
-            alert("Cập nhật người dùng thành công!");
+            await updateTeacherAPI(editingUser.id, payload);
+            message.success("Cập nhật tài khoản giảng viên thành công!");
             form.resetFields();
             setModalOpen(false);
             setEditingUser(null);
-            fetchStudents();
+            fetchTeachers();
         } catch (err) {
-            message.error("Lỗi cập nhật người dùng: " + err.message);
+            message.error("Lỗi cập nhật: " + err.message);
         }
     };
 
     const columns = [
         {
-            title: "Mã sinh viên",
+            title: "Mã giảng viên",
             dataIndex: "id",
             key: "id",
             align: "center",
@@ -156,7 +157,7 @@ const Students = () => {
             align: "center",
         },
         {
-            title: "Ngành",
+            title: "Khoa",
             dataIndex: "department",
             key: "department",
             align: "center",
@@ -171,7 +172,7 @@ const Students = () => {
                         type="primary"
                         icon={<EditOutlined />}
                         className={styles.editBtn}
-                        onClick={() => handleEditStudent(record.id)}
+                        onClick={() => handleEditTeacher(record.id)}
                     >
                         Sửa
                     </Button>
@@ -188,22 +189,22 @@ const Students = () => {
             <Content>
                 <Card className={styles.cardContainer}>
                     <Title level={2} className={styles.pageTitle}>
-                        Quản lý Sinh viên
+                        Quản lý Giảng viên
                     </Title>
                     <div style={{ marginBottom: 16 }}>
                         <Button type="primary" icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>
-                            Thêm sinh viên
+                            Thêm giảng viên
                         </Button>
                     </div>
                     <div className={styles.tableContainer}>
                         <Spin spinning={loading} tip="Đang tải...">
-                            <Table columns={columns} dataSource={students} pagination={{ pageSize: 5 }} bordered />
+                            <Table columns={columns} dataSource={teachers} pagination={{ pageSize: 5 }} bordered />
                         </Spin>
                     </div>
                 </Card>
 
                 <Modal
-                    title={editingUser ? "Chỉnh sửa người dùng" : "Thêm người dùng mới"}
+                    title={editingUser ? "Chỉnh sửa giảng viên" : "Thêm giảng viên mới"}
                     open={modalOpen}
                     onCancel={() => {
                         setModalOpen(false);
@@ -214,7 +215,7 @@ const Students = () => {
                     okText={editingUser ? "Cập nhật" : "Tạo"}
                     cancelText="Hủy"
                 >
-                    <Form form={form} layout="vertical" onFinish={editingUser ? handleUpdateStudent : handleAddStudent}>
+                    <Form form={form} layout="vertical" onFinish={editingUser ? handleUpdateTeacher : handleAddTeacher}>
                         <Form.Item
                             label="Email"
                             name="email"
@@ -248,7 +249,7 @@ const Students = () => {
                         >
                             <Select>
                                 <Option value="Nam">Nam</Option>
-                                <Option value="Nu">Nữ</Option>
+                                <Option value="Nữ">Nữ</Option>
                             </Select>
                         </Form.Item>
 
@@ -261,17 +262,17 @@ const Students = () => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Mã số sinh viên"
+                            label="Mã số giảng viên"
                             name="ms"
-                            rules={[{ required: true, message: "Vui lòng nhập mã số sinh viên" }]}
+                            rules={[{ required: true, message: "Vui lòng nhập mã số giảng viên" }]}
                         >
                             <Input />
                         </Form.Item>
 
                         <Form.Item
-                            label="Mã ngành"
-                            name="manganh"
-                            rules={[{ required: true, message: "Vui lòng nhập mã ngành" }]}
+                            label="Mã Khoa"
+                            name="makhoa"
+                            rules={[{ required: true, message: "Vui lòng nhập mã khoa" }]}
                         >
                             <Input />
                         </Form.Item>
@@ -282,4 +283,4 @@ const Students = () => {
     );
 };
 
-export default Students;
+export default Teachers;

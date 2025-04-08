@@ -22,11 +22,14 @@ const Admin = () => {
                     <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
                         <Link to="/admin">Dashboard</Link>
                     </Menu.Item>
-                    <Menu.Item key="subjects" icon={<BookOutlined />}>
-                        <Link to="/admin/subjects">Quản lý môn học</Link>
+                    <Menu.Item key="classes" icon={<BookOutlined />}>
+                        <Link to="/admin/classes">Lớp học</Link>
                     </Menu.Item>
-                    <Menu.Item key="user" icon={<UserOutlined />}>
-                        <Link to="/admin/students">Quản lý tài khoản sinh viên</Link>
+                    <Menu.Item key="students" icon={<UserOutlined />}>
+                        <Link to="/admin/students">Sinh viên</Link>
+                    </Menu.Item>
+                    <Menu.Item key="teachers" icon={<UserOutlined />}>
+                        <Link to="/admin/teachers">Giảng viên</Link>
                     </Menu.Item>
                 </Menu>
             </Sider>

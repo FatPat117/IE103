@@ -6,19 +6,19 @@ const { Content } = Layout;
 const { Title } = Typography;
 
 const columns = [
-    { title: "Mã môn học", dataIndex: "id", key: "id", align: "center" },
-    { title: "Tên môn học", dataIndex: "name", key: "name" },
-    { title: "Số tín chỉ", dataIndex: "credits", key: "credits", align: "center" },
+    { title: "Mã lớp", dataIndex: "id", key: "id", align: "center" },
+    { title: "Tên lớp", dataIndex: "name", key: "name" },
+    { title: "Sĩ số", dataIndex: "size", key: "size", align: "center" },
     {
         title: "Hành động",
         key: "action",
         align: "center",
         render: () => (
             <Space>
-                <Button type="primary" icon={<EditOutlined />} className={styles.editBtn}>
+                <Button className={styles.editBtn} icon={<EditOutlined />}>
                     Sửa
                 </Button>
-                <Button type="danger" icon={<DeleteOutlined />} className={styles.deleteBtn}>
+                <Button className={styles.deleteBtn} icon={<DeleteOutlined />}>
                     Xóa
                 </Button>
             </Space>
@@ -27,20 +27,20 @@ const columns = [
 ];
 
 const data = [
-    { key: "1", id: "IT001", name: "Lập trình Web", credits: 3 },
-    { key: "2", id: "IT002", name: "Cấu trúc dữ liệu", credits: 4 },
+    { key: "1", id: "CL001", name: "Lớp Công nghệ Web", size: 30 },
+    { key: "2", id: "CL002", name: "Lớp Cấu trúc dữ liệu", size: 25 },
 ];
 
-const Subjects = () => {
+const Classes = () => {
     return (
         <Layout className={styles.pageContainer}>
             <Content>
                 <Card className={styles.cardContainer}>
                     <Title level={2} className={styles.pageTitle}>
-                        Quản lý Môn học
+                        Quản lý Lớp học
                     </Title>
-                    <Button type="primary" icon={<PlusOutlined />}>
-                        Thêm môn học
+                    <Button className={styles.addBtn} icon={<PlusOutlined />}>
+                        Thêm lớp học
                     </Button>
                     <div className={styles.tableContainer}>
                         <Table columns={columns} dataSource={data} pagination={{ pageSize: 5 }} />
@@ -51,4 +51,4 @@ const Subjects = () => {
     );
 };
 
-export default Subjects;
+export default Classes;
