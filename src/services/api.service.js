@@ -199,7 +199,6 @@ export const createTeacherAPI = async (data) => {
     }
 };
 
-
 // 6. Update student info
 export const updateStudentAPI = async (userId, data) => {
     try {
@@ -252,7 +251,6 @@ export const updateTeacherAPI = async (userId, data) => {
     }
 };
 
-
 // Xóa sinh viên
 export const deleteUserAPI = async (userId) => {
     try {
@@ -300,3 +298,130 @@ export const getAllDepartmentsAPI = async () => {
     }
 };
 
+// get all majors
+export const getAllMajorsAPI = async () => {
+    try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
+
+        const response = await axios.get("/majors", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        handleAPIError(error, {
+            401: "Token hết hạn.",
+            404: "Không có ngành nào được tìm thấy.",
+        });
+    }
+};
+
+// get all classes
+export const getAllClassesAPI = async () => {
+    try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
+
+        const response = await axios.get("/classes", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        handleAPIError(error, {
+            500: "Lỗi máy chủ khi lấy danh sách lớp học.",
+        });
+    }
+};
+
+// get class by ID
+
+export const getClassByIdAPI = async (id) => {
+    try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
+
+        const response = await axios.get(`/classes/${id}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        handleAPIError(error, {
+            404: "Không tìm thấy thông tin lớp học.",
+        });
+    }
+};
+
+// create classes by excel file
+export const createClassByExcelAPI = async (file) => {
+    try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await axios.post("/classes", formData, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "multipart/form-data",
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        handleAPIError(error, {
+            400: "File không hợp lệ hoặc sai định dạng.",
+            409: "Dữ liệu trùng với lớp học khác.",
+            404: "Mã liên quan không tồn tại.",
+        });
+    }
+};
+
+// delete class by ID
+export const deleteClassAPI = async (id) => {
+    try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
+
+        const response = await axios.delete(`/classes/${id}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        handleAPIError(error, {
+            404: "Không tìm thấy lớp học để xóa.",
+        });
+    }
+};
+
+// update class by ID
+export const updateClassByIdAPI = async (id, data) => {
+    try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
+
+        const response = await axios.put(`/classes/${id}`, data, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        handleAPIError(error, {
+            404: "Không tìm thấy lớp học để cập nhật.",
+        });
+    }
+};

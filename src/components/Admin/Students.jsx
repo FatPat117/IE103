@@ -22,6 +22,7 @@ import {
     getUserByIdAPI,
     updateStudentAPI,
     deleteUserAPI,
+    getAllMajorsAPI,
 } from "../../services/api.service";
 import moment from "moment";
 
@@ -31,6 +32,7 @@ const { Option } = Select;
 
 const Students = () => {
     const [students, setStudents] = useState([]);
+    const [majors, setMajors] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [form] = Form.useForm();
@@ -63,8 +65,20 @@ const Students = () => {
         }
     };
 
+    const fetchMajors = async () => {
+        try {
+            const data = await getAllMajorsAPI();
+
+            setMajors(data);
+        } catch (err) {
+            console.error("Lỗi khi lấy danh sách ngành:", err);
+            console.log("Không thể tải danh sách ngành.");
+        }
+    };
+
     useEffect(() => {
         fetchStudents();
+        fetchMajors();
     }, []);
 
     const handleEditStudent = async (userId) => {
@@ -95,7 +109,7 @@ const Students = () => {
 
         try {
             await createStudentAPI(payload);
-            alert("Tạo người dùng thành công!");
+            message.success("Tạo người dùng thành công!");
             form.resetFields();
             setModalOpen(false);
             fetchStudents();
@@ -112,7 +126,6 @@ const Students = () => {
             dateOfBirth: values.dateOfBirth.format("YYYY-MM-DD"),
             sex: values.sex,
             ms: values.ms,
-            role: 1,
             manganh: values.manganh,
         };
 
@@ -120,7 +133,7 @@ const Students = () => {
 
         try {
             await updateStudentAPI(editingUser.id, payload);
-            alert("Cập nhật người dùng thành công!");
+            message.success("Cập nhật người dùng thành công!");
             form.resetFields();
             setModalOpen(false);
             setEditingUser(null);
@@ -140,7 +153,7 @@ const Students = () => {
             onOk: async () => {
                 try {
                     await deleteUserAPI(userId);
-                    alert("Xóa sinh viên thành công!");
+                    message.success("Xóa sinh viên thành công!");
                     fetchStudents();
                 } catch (err) {
                     message.error("Xóa sinh viên thất bại: " + (err.message || "Lỗi không xác định"));
@@ -172,12 +185,6 @@ const Students = () => {
             title: "Giới tính",
             dataIndex: "sex",
             key: "sex",
-            align: "center",
-        },
-        {
-            title: "Vai trò",
-            dataIndex: "roleName",
-            key: "roleName",
             align: "center",
         },
         {
@@ -304,7 +311,13 @@ const Students = () => {
                             name="manganh"
                             rules={[{ required: true, message: "Vui lòng nhập mã ngành" }]}
                         >
-                            <Input />
+                            <Select placeholder="Chọn ngành">
+                                {majors.map((major) => (
+                                    <Select.Option key={major.maNganh} value={major.maNganh}>
+                                        {major.tenNganh}
+                                    </Select.Option>
+                                ))}
+                            </Select>
                         </Form.Item>
                     </Form>
                 </Modal>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Layout, Card, Row, Col, Spin, message } from "antd";
 import { UserOutlined, BookOutlined, BarChartOutlined } from "@ant-design/icons";
 import styles from "./Admin.module.scss";
-import { getAllUsersAPI } from "../../services/api.service";
+import { getAllClassesAPI, getAllUsersAPI } from "../../services/api.service";
 
 const { Content } = Layout;
 
@@ -10,7 +10,7 @@ const AdminDashboard = () => {
     const [loading, setLoading] = useState(false);
     const [studentCount, setStudentCount] = useState(0);
     const [teacherCount, setTeacherCount] = useState(0);
-    const [classCount] = useState(50); // Fake data
+    const [classCount, setClassCount] = useState(0);
 
     const fetchData = async () => {
         setLoading(true);
@@ -18,6 +18,8 @@ const AdminDashboard = () => {
             const users = await getAllUsersAPI();
             const students = users.filter((u) => u.role === 1);
             const teachers = users.filter((u) => u.role === 2);
+            const classes = await getAllClassesAPI();
+            setClassCount(classes.length);
             setStudentCount(students.length);
             setTeacherCount(teachers.length);
         } catch (err) {

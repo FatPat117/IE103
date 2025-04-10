@@ -42,6 +42,7 @@ const Teachers = () => {
         setLoading(true);
         try {
             const data = await getAllUsersAPI();
+
             const filtered = data.filter((user) => user.role === 2);
 
             const formatted = filtered.map((teacher) => ({
@@ -108,7 +109,7 @@ const Teachers = () => {
 
         try {
             await createTeacherAPI(payload);
-            alert("Tạo tài khoản giảng viên thành công!");
+            message.success("Tạo tài khoản giảng viên thành công!");
             form.resetFields();
             setModalOpen(false);
             fetchTeachers();
@@ -124,16 +125,13 @@ const Teachers = () => {
             name: values.name,
             dateOfBirth: values.dateOfBirth.format("YYYY-MM-DD"),
             sex: values.sex,
-            role: 2,
             makhoa: values.makhoa,
             ms: values.ms,
         };
 
-        console.log(payload);
-
         try {
             await updateTeacherAPI(editingUser.id, payload);
-            alert("Cập nhật tài khoản giảng viên thành công!");
+            message.success("Cập nhật tài khoản giảng viên thành công!");
             form.resetFields();
             setModalOpen(false);
             setEditingUser(null);
@@ -152,7 +150,7 @@ const Teachers = () => {
             onOk: async () => {
                 try {
                     await deleteUserAPI(userId);
-                    alert("Xóa giảng viên thành công!");
+                    message.success("Xóa giảng viên thành công!");
                     fetchTeachers();
                 } catch (err) {
                     console.error("Lỗi khi xóa giảng viên:", err);
@@ -185,12 +183,6 @@ const Teachers = () => {
             title: "Giới tính",
             dataIndex: "sex",
             key: "sex",
-            align: "center",
-        },
-        {
-            title: "Vai trò",
-            dataIndex: "roleName",
-            key: "roleName",
             align: "center",
         },
         {

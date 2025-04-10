@@ -1,143 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./ClassList.module.css";
+import { getAllClassesAPI } from "~/services/api.service";
 
 const cx = classNames.bind(styles);
 
-const classData = [
-    {
-        id: "BUS1125.011",
-        name: "Khởi nghiệp kinh doanh",
-        credits: 3,
-        schedule: "Thứ 5, Tiết 1234",
-        registered: "21/100",
-    },
-    { id: "CE121.011", name: "Lý thuyết mạch điện", credits: 3, schedule: "Thứ 4, Tiết 6789", registered: "25/60" },
-    { id: "CE121.011.1", name: "Lý thuyết mạch điện", credits: 3, schedule: "Thứ 4, Tiết 12345", registered: "22/30" },
-    { id: "CE121.011.2", name: "Lý thuyết mạch điện", credits: 3, schedule: "Thứ 4, Tiết 12345", registered: "3/20" },
-    {
-        id: "CE408.011",
-        name: "Đồ án chuyên ngành Thiết kế vi mạch",
-        credits: 2,
-        schedule: "Thứ *, Tiết *",
-        registered: "1/100",
-    },
-    {
-        id: "CE412.011",
-        name: "Đồ án chuyên ngành Hệ thống nhúng và IoT",
-        credits: 2,
-        schedule: "Thứ *, Tiết *",
-        registered: "3/100",
-    },
-    { id: "CS106.011", name: "Trí tuệ nhân tạo", credits: 3, schedule: "Thứ 2, Tiết 678", registered: "11/50" },
-    {
-        id: "CS112.011",
-        name: "Phân tích và thiết kế hệ thống",
-        credits: 3,
-        schedule: "Thứ 3, Tiết 1234",
-        registered: "4/50",
-    },
-    {
-        id: "BUS1125.011",
-        name: "Khởi nghiệp kinh doanh",
-        credits: 3,
-        schedule: "Thứ 5, Tiết 1234",
-        registered: "21/100",
-    },
-    { id: "CE121.011", name: "Lý thuyết mạch điện", credits: 3, schedule: "Thứ 4, Tiết 6789", registered: "25/60" },
-    { id: "CE121.011.1", name: "Lý thuyết mạch điện", credits: 3, schedule: "Thứ 4, Tiết 12345", registered: "22/30" },
-    { id: "CE121.011.2", name: "Lý thuyết mạch điện", credits: 3, schedule: "Thứ 4, Tiết 12345", registered: "3/20" },
-    {
-        id: "CE408.011",
-        name: "Đồ án chuyên ngành Thiết kế vi mạch",
-        credits: 2,
-        schedule: "Thứ *, Tiết *",
-        registered: "1/100",
-    },
-    {
-        id: "CE412.011",
-        name: "Đồ án chuyên ngành Hệ thống nhúng và IoT",
-        credits: 2,
-        schedule: "Thứ *, Tiết *",
-        registered: "3/100",
-    },
-    { id: "CS106.011", name: "Trí tuệ nhân tạo", credits: 3, schedule: "Thứ 2, Tiết 678", registered: "11/50" },
-    {
-        id: "CS112.011",
-        name: "Phân tích và thiết kế hệ thống",
-        credits: 3,
-        schedule: "Thứ 3, Tiết 1234",
-        registered: "4/50",
-    },
-    {
-        id: "BUS1125.011",
-        name: "Khởi nghiệp kinh doanh",
-        credits: 3,
-        schedule: "Thứ 5, Tiết 1234",
-        registered: "21/100",
-    },
-    { id: "CE121.011", name: "Lý thuyết mạch điện", credits: 3, schedule: "Thứ 4, Tiết 6789", registered: "25/60" },
-    { id: "CE121.011.1", name: "Lý thuyết mạch điện", credits: 3, schedule: "Thứ 4, Tiết 12345", registered: "22/30" },
-    { id: "CE121.011.2", name: "Lý thuyết mạch điện", credits: 3, schedule: "Thứ 4, Tiết 12345", registered: "3/20" },
-    {
-        id: "CE408.011",
-        name: "Đồ án chuyên ngành Thiết kế vi mạch",
-        credits: 2,
-        schedule: "Thứ *, Tiết *",
-        registered: "1/100",
-    },
-    {
-        id: "CE412.011",
-        name: "Đồ án chuyên ngành Hệ thống nhúng và IoT",
-        credits: 2,
-        schedule: "Thứ *, Tiết *",
-        registered: "3/100",
-    },
-    { id: "CS106.011", name: "Trí tuệ nhân tạo", credits: 3, schedule: "Thứ 2, Tiết 678", registered: "11/50" },
-    {
-        id: "CS112.011",
-        name: "Phân tích và thiết kế hệ thống",
-        credits: 3,
-        schedule: "Thứ 3, Tiết 1234",
-        registered: "4/50",
-    },
-    {
-        id: "BUS1125.011",
-        name: "Khởi nghiệp kinh doanh",
-        credits: 3,
-        schedule: "Thứ 5, Tiết 1234",
-        registered: "21/100",
-    },
-    { id: "CE121.011", name: "Lý thuyết mạch điện", credits: 3, schedule: "Thứ 4, Tiết 6789", registered: "25/60" },
-    { id: "CE121.011.1", name: "Lý thuyết mạch điện", credits: 3, schedule: "Thứ 4, Tiết 12345", registered: "22/30" },
-    { id: "CE121.011.2", name: "Lý thuyết mạch điện", credits: 3, schedule: "Thứ 4, Tiết 12345", registered: "3/20" },
-    {
-        id: "CE408.011",
-        name: "Đồ án chuyên ngành Thiết kế vi mạch",
-        credits: 2,
-        schedule: "Thứ *, Tiết *",
-        registered: "1/100",
-    },
-    {
-        id: "CE412.011",
-        name: "Đồ án chuyên ngành Hệ thống nhúng và IoT",
-        credits: 2,
-        schedule: "Thứ *, Tiết *",
-        registered: "3/100",
-    },
-    { id: "CS106.011", name: "Trí tuệ nhân tạo", credits: 3, schedule: "Thứ 2, Tiết 678", registered: "11/50" },
-    {
-        id: "CS112.011",
-        name: "Phân tích và thiết kế hệ thống",
-        credits: 3,
-        schedule: "Thứ 3, Tiết 1234",
-        registered: "4/50",
-    },
-];
+function formatDate(isoString) {
+    const date = new Date(isoString);
+    return date.toLocaleDateString("vi-VN");
+}
 
 function ClassList() {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedClasses, setSelectedClasses] = useState({});
+    const [classData, setClassData] = useState([]);
+
+    useEffect(() => {
+        const fetchClasses = async () => {
+            try {
+                const data = await getAllClassesAPI();
+                setClassData(data);
+            } catch (error) {
+                if (error?.response?.status === 500) {
+                    alert("Lỗi máy chủ khi tải danh sách lớp học.");
+                } else if (error?.response?.data?.message) {
+                    alert(error.response.data.message);
+                } else {
+                    alert("Đã có lỗi xảy ra. Vui lòng thử lại.");
+                }
+                console.error("Lỗi khi gọi API:", error);
+            }
+        };
+
+        fetchClasses();
+    }, []);
 
     const handleSearch = (event) => {
         setSearchTerm(event.target.value);
@@ -150,15 +46,19 @@ function ClassList() {
         }));
     };
 
-    const filteredClasses = classData.filter((item) => item.id.toLowerCase().includes(searchTerm.toLowerCase()));
+    const filteredClasses = classData.filter(
+        (item) =>
+            item.malh.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.mamh?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className={cx("wrapper")}>
             <div className="container">
-                <h2 className={cx("title")}>Danh sách lớp mở đăng ký thử nghiệm</h2>
+                <h2 className={cx("title")}>Danh sách lớp mở đăng ký</h2>
                 <input
                     type="text"
-                    placeholder="Nhập vào Mã môn học hoặc mã lớp để tìm kiếm, nhiều lớp cách nhau dấu phẩy, khoảng trắng, xuống dòng hoặc dấu chấm phẩy (,;\n\r)"
+                    placeholder="Nhập mã lớp hoặc mã môn học để tìm kiếm..."
                     className={cx("search-input", "full-width")}
                     value={searchTerm}
                     onChange={handleSearch}
@@ -169,27 +69,34 @@ function ClassList() {
                             <th className={cx("th", "header")}></th>
                             <th className={cx("th", "header")}>Mã lớp</th>
                             <th className={cx("th", "header")}>Môn học</th>
-                            <th className={cx("th", "header")}>Số TC</th>
-                            <th className={cx("th", "header")}>Thời gian học</th>
-                            <th className={cx("th", "header")}>Đã ĐK/Sĩ số</th>
+                            <th className={cx("th", "header")}>Sĩ số</th>
+                            <th className={cx("th", "header")}>Từ tiết</th>
+                            <th className={cx("th", "header")}>Đến tiết</th>
+                            <th className={cx("th", "header")}>Bắt đầu</th>
+                            <th className={cx("th", "header")}>Kết thúc</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredClasses.map((item, index) => (
-                            <tr key={index} className={cx("tr", { even: index % 2 === 0, odd: index % 2 !== 0 })}>
+                            <tr
+                                key={item.id || index}
+                                className={cx("tr", { even: index % 2 === 0, odd: index % 2 !== 0 })}
+                            >
                                 <td className={cx("td")}>
                                     <input
                                         type="checkbox"
                                         className={cx("checkbox-small")}
-                                        checked={!!selectedClasses[item.id]}
-                                        onChange={() => toggleSelection(item.id)}
+                                        checked={!!selectedClasses[item.malh]}
+                                        onChange={() => toggleSelection(item.malh)}
                                     />
                                 </td>
-                                <td className={cx("td")}>{item.id}</td>
-                                <td className={cx("td")}>{item.name}</td>
-                                <td className={cx("td")}>{item.credits}</td>
-                                <td className={cx("td")}>{item.schedule}</td>
-                                <td className={cx("td")}>{item.registered}</td>
+                                <td className={cx("td")}>{item.malh}</td>
+                                <td className={cx("td")}>{item.tenMH}</td>
+                                <td className={cx("td")}>{item.soLuongSinhVien}</td>
+                                <td className={cx("td")}>{item.tietBatDau}</td>
+                                <td className={cx("td")}>{item.tietKetThuc}</td>
+                                <td className={cx("td")}>{formatDate(item.ngayBatDau)}</td>
+                                <td className={cx("td")}>{formatDate(item.ngayKetThuc)}</td>
                             </tr>
                         ))}
                     </tbody>
