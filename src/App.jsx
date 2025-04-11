@@ -3,7 +3,6 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import Students from "./components/Admin/Students";
-import Subjects from "./components/Admin/Subjects";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 
@@ -14,6 +13,8 @@ import Schedule from "./pages/Schedule/Schedule";
 
 import AdminRoute from "./routes/AdminRoute";
 import Confirmed from "./pages/ConfirmedList/Confirmed";
+import Classes from "./components/Admin/Classes";
+import Teachers from "./components/Admin/Teacher";
 
 function App() {
     const location = useLocation();
@@ -48,12 +49,16 @@ function App() {
                         element={userRole === "ADMIN" ? <AdminDashboard /> : <Navigate to="/login" />}
                     />
                     <Route
-                        path="/admin/subjects"
-                        element={userRole === "ADMIN" ? <Subjects /> : <Navigate to="/login" />}
+                        path="/admin/classes"
+                        element={userRole === "ADMIN" ? <Classes /> : <Navigate to="/login" />}
                     />
                     <Route
                         path="/admin/students"
                         element={userRole === "ADMIN" ? <Students /> : <Navigate to="/login" />}
+                    />
+                    <Route
+                        path="/admin/teachers"
+                        element={userRole === "ADMIN" ? <Teachers /> : <Navigate to="/login" />}
                     />
                 </Route>
             </Routes>
