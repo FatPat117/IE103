@@ -1,11 +1,12 @@
 import { Button, Layout, Menu } from "antd";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { DashboardOutlined, BookOutlined, UserOutlined } from "@ant-design/icons";
 
 const { Header, Content, Sider } = Layout;
 
 const Admin = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const userRole = sessionStorage.getItem("userRole");
 
     const handleBack = () => {
@@ -15,30 +16,39 @@ const Admin = () => {
     return (
         <Layout style={{ minHeight: "100vh" }}>
             <Sider collapsible>
-                <div className="logo" style={{ height: "32px", margin: "16px", color: "white", textAlign: "center" }}>
+                <div
+                    className="logo"
+                    style={{
+                        height: "32px",
+                        margin: "16px",
+                        color: "white",
+                        textAlign: "center",
+                    }}
+                >
                     Admin Panel
                 </div>
                 <Menu
                     theme="dark"
                     mode="inline"
+                    selectedKeys={[location.pathname]}
                     items={[
                         {
-                            key: "dashboard",
+                            key: "/admin",
                             icon: <DashboardOutlined />,
                             label: <Link to="/admin">Dashboard</Link>,
                         },
                         {
-                            key: "classes",
+                            key: "/admin/classes",
                             icon: <BookOutlined />,
                             label: <Link to="/admin/classes">Lớp học</Link>,
                         },
                         {
-                            key: "students",
+                            key: "/admin/students",
                             icon: <UserOutlined />,
                             label: <Link to="/admin/students">Sinh viên</Link>,
                         },
                         {
-                            key: "teachers",
+                            key: "/admin/teachers",
                             icon: <UserOutlined />,
                             label: <Link to="/admin/teachers">Giảng viên</Link>,
                         },
