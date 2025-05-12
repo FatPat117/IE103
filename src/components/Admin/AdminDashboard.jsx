@@ -3,6 +3,7 @@ import { Layout, Card, Row, Col, Spin, message } from "antd";
 import { UserOutlined, BookOutlined, BarChartOutlined } from "@ant-design/icons";
 import styles from "./Admin.module.scss";
 import { getAllClassesAPI, getAllUsersAPI } from "../../services/api.service";
+import { Link } from "react-router-dom";
 
 const { Content } = Layout;
 
@@ -40,25 +41,31 @@ const AdminDashboard = () => {
                 <Spin spinning={loading}>
                     <Row gutter={[16, 16]}>
                         <Col span={8}>
-                            <Card className={styles.card} hoverable>
-                                <UserOutlined style={{ fontSize: "40px", color: "#0077cc" }} />
-                                <h3>{studentCount}+ Sinh viên</h3>
-                                <p>Đã đăng ký</p>
-                            </Card>
+                            <Link to="/admin/students">
+                                <Card className={styles.card} hoverable>
+                                    <UserOutlined style={{ fontSize: "40px", color: "#0077cc" }} />
+                                    <h3>{studentCount}+ Sinh viên</h3>
+                                    <p>Đã đăng ký</p>
+                                </Card>
+                            </Link>
                         </Col>
                         <Col span={8}>
-                            <Card className={styles.card} hoverable>
-                                <UserOutlined style={{ fontSize: "40px", color: "#0077cc" }} />
-                                <h3>{teacherCount}+ Giảng viên</h3>
-                                <p>Đang hoạt động</p>
-                            </Card>
+                            <Link to="/admin/teachers">
+                                <Card className={styles.card} hoverable>
+                                    <UserOutlined style={{ fontSize: "40px", color: "#0077cc" }} />
+                                    <h3>{teacherCount}+ Giảng viên</h3>
+                                    <p>Đang hoạt động</p>
+                                </Card>
+                            </Link>
                         </Col>
                         <Col span={8}>
-                            <Card className={styles.card} hoverable>
-                                <BookOutlined style={{ fontSize: "40px", color: "#0077cc" }} />
-                                <h3>{classCount}+ Lớp học</h3>
-                                <p>Đã mở</p>
-                            </Card>
+                            <Link to="/admin/classes">
+                                <Card className={styles.card} hoverable>
+                                    <BookOutlined style={{ fontSize: "40px", color: "#0077cc" }} />
+                                    <h3>{classCount}+ Lớp học</h3>
+                                    <p>Đã mở</p>
+                                </Card>
+                            </Link>
                         </Col>
                     </Row>
                 </Spin>

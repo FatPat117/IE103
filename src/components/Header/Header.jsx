@@ -21,6 +21,9 @@ function Header() {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
+        const confirmLogout = window.confirm("Bạn có chắc chắn muốn đăng xuất?");
+        if (!confirmLogout) return;
+
         try {
             const user = JSON.parse(sessionStorage.getItem("user"));
 

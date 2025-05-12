@@ -5,11 +5,6 @@ import { getAllClassesAPI } from "~/services/api.service";
 
 const cx = classNames.bind(styles);
 
-function formatDate(isoString) {
-    const date = new Date(isoString);
-    return date.toLocaleDateString("vi-VN");
-}
-
 function ClassList() {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedClasses, setSelectedClasses] = useState({});
@@ -67,13 +62,12 @@ function ClassList() {
                     <thead>
                         <tr>
                             <th className={cx("th", "header")}></th>
-                            <th className={cx("th", "header")}>Mã lớp</th>
-                            <th className={cx("th", "header")}>Môn học</th>
+                            <th className={cx("th", "header")}>Mã lớp học</th>
+                            <th className={cx("th", "header")}>Mã môn học</th>
+                            <th className={cx("th", "header")}>Tên môn học</th>
                             <th className={cx("th", "header")}>Sĩ số</th>
-                            <th className={cx("th", "header")}>Từ tiết</th>
-                            <th className={cx("th", "header")}>Đến tiết</th>
-                            <th className={cx("th", "header")}>Bắt đầu</th>
-                            <th className={cx("th", "header")}>Kết thúc</th>
+                            <th className={cx("th", "header")}>Tiết bắt đầu</th>
+                            <th className={cx("th", "header")}>Tiết kết thúc</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -91,12 +85,11 @@ function ClassList() {
                                     />
                                 </td>
                                 <td className={cx("td")}>{item.malh}</td>
+                                <td className={cx("td")}>{item.mamh}</td>
                                 <td className={cx("td")}>{item.tenMH}</td>
                                 <td className={cx("td")}>{item.soLuongSinhVien}</td>
                                 <td className={cx("td")}>{item.tietBatDau}</td>
                                 <td className={cx("td")}>{item.tietKetThuc}</td>
-                                <td className={cx("td")}>{formatDate(item.ngayBatDau)}</td>
-                                <td className={cx("td")}>{formatDate(item.ngayKetThuc)}</td>
                             </tr>
                         ))}
                     </tbody>
