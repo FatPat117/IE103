@@ -24,6 +24,7 @@ function ClassList() {
         const fetchData = async () => {
             try {
                 const classes = await getAllClassesAPI();
+
                 setClassData(classes);
 
                 if (!classes || classes.length === 0) {
@@ -31,20 +32,36 @@ function ClassList() {
                     return;
                 }
 
-                const firstClass = classes[0];
-                const newHocKi = firstClass.hocKi;
-                const newNamHoc = firstClass.namHoc;
+                let maPDK = localStorage.getItem("maPDK");
 
-                const registration = await createRegistrationAPI({
-                    hocKi: newHocKi,
-                    namHoc: newNamHoc,
-                    soTinChi: 0,
-                    maSV: studentId,
-                });
+                if (!maPDK) {
+                    const firstClass = classes[0];
+                    const newHocKi = firstClass.hocKi;
+                    const newNamHoc = firstClass.namHoc;
 
-                setRegistrationId(registration.maPDK);
-                const pdk = await getRegistrationFormByIdAPI(registration.maPDK);
-                console.log(pdk);
+                    const registration = await createRegistrationAPI({
+                        hocKi: newHocKi,
+                        namHoc: newNamHoc,
+                        soTinChi: 0,
+                        maSV: studentId,
+                    });
+
+                    maPDK = registration.maPDK;
+                    localStorage.setItem("maPDK", maPDK);
+                }
+
+                setRegistrationId(maPDK);
+
+                const registrationForm = await getRegistrationFormByIdAPI(maPDK);
+
+                // Tick lại các lớp đã chọn
+                const selected = {};
+                if (registrationForm.phieuDangKyLopHocList && Array.isArray(registrationForm.phieuDangKyLopHocList)) {
+                    registrationForm.phieuDangKyLopHocList.forEach((cls) => {
+                        selected[cls.maLopHoc] = true;
+                    });
+                }
+                setSelectedClasses(selected);
             } catch (error) {
                 alert(error.message);
                 console.error("Lỗi khi khởi tạo dữ liệu:", error);
@@ -63,45 +80,28 @@ function ClassList() {
 
         try {
             if (selectedClasses[malh]) {
-                // Nếu đã chọn => Bỏ chọn => Gọi API xóa
                 await removeClassFromRegistrationAPI(registrationId, malh);
 
-                const pdk = await getRegistrationFormByIdAPI(registrationId);
-                console.log(pdk);
-
-                // Cập nhật selectedClasses (gỡ lớp ra)
                 setSelectedClasses((prev) => {
                     const updated = { ...prev };
                     delete updated[malh];
                     return updated;
                 });
 
-                // Tính lại disabledClasses dựa trên các lớp còn đang chọn
                 const updatedDisabled = {};
                 const selectedIds = Object.keys(selectedClasses).filter((id) => id !== malh);
-                // lấy ra id của những lớp đã được chọn
 
-                // Lặp qua từng lớp học trong danh sách classData
                 classData.forEach((cls) => {
-                    // Lặp qua từng ID lớp học đã được chọn
                     for (const selectedId of selectedIds) {
-                        // Tìm lớp học tương ứng với ID đã chọn
                         const selected = classData.find((c) => c.malh === selectedId);
                         if (!selected) continue;
-                        // Trường hợp mã lớp bị lỗi gì đó dẫn đến id của lớp đã được chọn không nằm trong danh sách lớp ban đầu, thêm vào để chắc chắn đoạn code sẽ chạy đúng
 
-                        // Kiểm tra xem lớp hiện tại (cls) và lớp đã chọn (selected) có cùng môn học không
                         const sameSubject = cls.mamh === selected.mamh;
-
-                        // Kiểm tra xem lớp hiện tại (cls) và lớp đã chọn (selected) có cùng ngày học không
                         const sameDay = cls.thu === selected.thu;
-
-                        // Kiểm tra xem thời gian học của hai lớp có bị trùng nhau không
                         const timeOverlap = !(
                             cls.tietKetThuc < selected.tietBatDau || cls.tietBatDau > selected.tietKetThuc
                         );
 
-                        // Nếu lớp hiện tại chưa nằm trong danh sách những lớp đã được chọn và vi phạm các mục khác thì thêm nó vào disable
                         if (!selectedIds.includes(cls.malh) && (sameSubject || (sameDay && timeOverlap))) {
                             updatedDisabled[cls.malh] = true;
                         }
@@ -110,9 +110,7 @@ function ClassList() {
 
                 setDisabledClasses(updatedDisabled);
             } else {
-                // Nếu chưa chọn => Thêm lớp
                 await addClassToRegistrationAPI(registrationId, malh);
-
                 const pdk = await getRegistrationFormByIdAPI(registrationId);
                 console.log(pdk);
 
@@ -121,7 +119,6 @@ function ClassList() {
                     [malh]: true,
                 }));
 
-                // Vô hiệu hóa các lớp trùng môn hoặc trùng lịch, trừ lớp vừa chọn
                 const conflicts = classData.filter((cls) => {
                     const sameSubject = cls.mamh === selectedClass.mamh;
                     const sameDay = cls.thu === selectedClass.thu;
@@ -129,11 +126,7 @@ function ClassList() {
                         cls.tietKetThuc < selectedClass.tietBatDau || cls.tietBatDau > selectedClass.tietKetThuc
                     );
 
-                    return (
-                        cls.malh !== malh && // không disable chính lớp đang chọn
-                        !selectedClasses[cls.malh] &&
-                        (sameSubject || (sameDay && timeOverlap))
-                    );
+                    return cls.malh !== malh && !selectedClasses[cls.malh] && (sameSubject || (sameDay && timeOverlap));
                 });
 
                 const newDisabled = {};
