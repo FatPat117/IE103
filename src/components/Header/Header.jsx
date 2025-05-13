@@ -35,11 +35,8 @@ function Header() {
             const res = await logoutAPI(user.email);
 
             if (res) {
-                sessionStorage.removeItem("accessToken");
-                sessionStorage.removeItem("refreshToken");
-                sessionStorage.removeItem("user");
-                sessionStorage.removeItem("userRole");
-                sessionStorage.removeItem("activeLink");
+                sessionStorage.clear();
+                localStorage.clear();
                 navigate("/login");
             }
         } catch (error) {
