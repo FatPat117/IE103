@@ -425,3 +425,109 @@ export const updateClassByIdAPI = async (id, data) => {
         });
     }
 };
+
+// get all registration forms
+export const getAllRegistrationFormsAPI = async () => {
+    try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
+
+        const response = await axios.get("/registration-forms", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        handleAPIError(error, {
+            404: "Không tìm thấy phiếu đăng ký nào.",
+        });
+    }
+};
+
+// tạo phiếu đăng ký
+export const createRegistrationAPI = async (data) => {
+    try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
+
+        const response = await axios.post("/registration-forms", data, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        if (error.response?.status === 404) {
+            throw new Error("Tạo phiếu đăng ký lỗi: Không tìm thấy lớp học hoặc sinh viên.");
+        } else {
+            throw new Error("Đã xảy ra lỗi khi tạo phiếu đăng ký.");
+        }
+    }
+};
+
+//  lấy phiếu đăng ký theo mã PDK
+export const getRegistrationFormByIdAPI = async (id) => {
+    try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
+
+        const response = await axios.get(`/registration-forms/${id}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        handleAPIError(error, {
+            404: "Không tìm thấy phiếu đăng ký.",
+        });
+    }
+};
+
+// thêm lớp học vào phiếu đăng ký
+export const addClassToRegistrationAPI = async (registrationId, classId) => {
+    try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
+
+        const response = await axios.post(
+            `/registration-forms/${registrationId}/class/${classId}`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            }
+        );
+
+        return response.data;
+    } catch (error) {
+        handleAPIError(error, {
+            404: "Không tìm thấy phiếu đăng ký hoặc lớp học.",
+        });
+    }
+};
+
+// xóa lớp học khỏi phiếu đăng ký
+export const removeClassFromRegistrationAPI = async (registrationId, classId) => {
+    try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
+
+        const response = await axios.delete(`/registration-forms/${registrationId}/class/${classId}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        handleAPIError(error, {
+            404: "Không tìm thấy phiếu đăng ký hoặc lớp học.",
+        });
+    }
+};

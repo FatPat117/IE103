@@ -42,6 +42,9 @@ const Students = () => {
         setLoading(true);
         try {
             const data = await getAllUsersAPI();
+
+            console.log(data);
+
             const filtered = data.filter((student) => student.role === 1);
 
             const formatted = filtered.map((student) => ({

@@ -18,6 +18,17 @@ function Login() {
         try {
             const res = await loginAPI(studentId, password, true);
 
+            
+
+            if (res) {
+                localStorage.setItem("studentId", res.id);
+                setTimeout(() => {
+                    navigate("/dashboard");
+                }, 100);
+            } else {
+                alert("Mã số sinh viên hoặc mật khẩu không đúng!");
+            }
+
             if (res) {
                 setTimeout(() => {
                     navigate("/dashboard");
