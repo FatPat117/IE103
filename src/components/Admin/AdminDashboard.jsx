@@ -4,6 +4,7 @@ import { UserOutlined, BookOutlined, BarChartOutlined } from "@ant-design/icons"
 import styles from "./Admin.module.scss";
 import { getAllClassesAPI, getAllUsersAPI } from "../../services/api.service";
 import { Link } from "react-router-dom";
+import { showErrorNotification } from "~/utils/showErrorNotification";
 
 const { Content } = Layout;
 
@@ -24,7 +25,7 @@ const AdminDashboard = () => {
             setStudentCount(students.length);
             setTeacherCount(teachers.length);
         } catch (err) {
-            message.error("Không thể lấy dữ liệu người dùng.");
+            showErrorNotification("Không thể lấy dữ liệu người dùng.");
             console.error(err);
         } finally {
             setLoading(false);

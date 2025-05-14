@@ -28,6 +28,10 @@ function App() {
     const isLoginPage = location.pathname === "/login";
     const isAdminPage = location.pathname.startsWith("/admin");
 
+    if (sessionStorage.getItem("userRole") === "ADMIN" && !isAdminPage) {
+        return <Navigate to="/admin" replace />;
+    }
+
     if (!sessionStorage.getItem("userRole") && !isLoginPage) {
         return <Navigate to="/login" replace />;
     }
@@ -44,22 +48,10 @@ function App() {
                 <Route path="/login" element={<Login />} />
 
                 <Route element={<AdminRoute />}>
-                    <Route
-                        path="/admin"
-                        element={userRole === "ADMIN" ? <AdminDashboard /> : <Navigate to="/login" />}
-                    />
-                    <Route
-                        path="/admin/classes"
-                        element={userRole === "ADMIN" ? <Classes /> : <Navigate to="/login" />}
-                    />
-                    <Route
-                        path="/admin/students"
-                        element={userRole === "ADMIN" ? <Students /> : <Navigate to="/login" />}
-                    />
-                    <Route
-                        path="/admin/teachers"
-                        element={userRole === "ADMIN" ? <Teachers /> : <Navigate to="/login" />}
-                    />
+                    <Route path="/admin" element={userRole === "ADMIN" ? <AdminDashboard /> : <Navigate to="/login" />} />
+                    <Route path="/admin/classes" element={userRole === "ADMIN" ? <Classes /> : <Navigate to="/login" />} />
+                    <Route path="/admin/students" element={userRole === "ADMIN" ? <Students /> : <Navigate to="/login" />} />
+                    <Route path="/admin/teachers" element={userRole === "ADMIN" ? <Teachers /> : <Navigate to="/login" />} />
                 </Route>
             </Routes>
             {!isLoginPage && !isAdminPage && <Footer />}

@@ -1,14 +1,8 @@
 import { useEffect, useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./ClassList.module.css";
-import {
-    getAllClassesAPI,
-    createRegistrationAPI,
-    addClassToRegistrationAPI,
-    removeClassFromRegistrationAPI,
-    getRegistrationFormByIdAPI,
-} from "~/services/api.service";
-
+import { getAllClassesAPI, createRegistrationAPI, addClassToRegistrationAPI, removeClassFromRegistrationAPI, getRegistrationFormByIdAPI } from "~/services/api.service";
+import { showErrorNotification } from "~/utils/showErrorNotification";
 const cx = classNames.bind(styles);
 
 function ClassList() {
@@ -28,7 +22,7 @@ function ClassList() {
                 setClassData(classes);
 
                 if (!classes || classes.length === 0) {
-                    alert("Không có lớp học nào để tạo phiếu đăng ký.");
+                    showErrorNotification("Không có lớp nào để đăng ký.");
                     return;
                 }
 
@@ -63,7 +57,7 @@ function ClassList() {
                 }
                 setSelectedClasses(selected);
             } catch (error) {
-                alert(error.message);
+                showErrorNotification("Lỗi khi tải dữ liệu lớp học", error.message);
                 console.error("Lỗi khi khởi tạo dữ liệu:", error);
             }
         };
@@ -98,9 +92,7 @@ function ClassList() {
 
                         const sameSubject = cls.mamh === selected.mamh;
                         const sameDay = cls.thu === selected.thu;
-                        const timeOverlap = !(
-                            cls.tietKetThuc < selected.tietBatDau || cls.tietBatDau > selected.tietKetThuc
-                        );
+                        const timeOverlap = !(cls.tietKetThuc < selected.tietBatDau || cls.tietBatDau > selected.tietKetThuc);
 
                         if (!selectedIds.includes(cls.malh) && (sameSubject || (sameDay && timeOverlap))) {
                             updatedDisabled[cls.malh] = true;
@@ -112,7 +104,6 @@ function ClassList() {
             } else {
                 await addClassToRegistrationAPI(registrationId, malh);
                 const pdk = await getRegistrationFormByIdAPI(registrationId);
-                console.log(pdk);
 
                 setSelectedClasses((prev) => ({
                     ...prev,
@@ -122,9 +113,7 @@ function ClassList() {
                 const conflicts = classData.filter((cls) => {
                     const sameSubject = cls.mamh === selectedClass.mamh;
                     const sameDay = cls.thu === selectedClass.thu;
-                    const timeOverlap = !(
-                        cls.tietKetThuc < selectedClass.tietBatDau || cls.tietBatDau > selectedClass.tietKetThuc
-                    );
+                    const timeOverlap = !(cls.tietKetThuc < selectedClass.tietBatDau || cls.tietBatDau > selectedClass.tietKetThuc);
 
                     return cls.malh !== malh && !selectedClasses[cls.malh] && (sameSubject || (sameDay && timeOverlap));
                 });
@@ -140,28 +129,18 @@ function ClassList() {
                 }));
             }
         } catch (error) {
-            alert(error.message);
+            showErrorNotification("Lỗi khi xử lý thêm lớp học", error.message);
             console.error("Lỗi khi xử lý chọn lớp:", error);
         }
     };
 
-    const filteredClasses = classData.filter(
-        (item) =>
-            item.malh.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.mamh?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredClasses = classData.filter((item) => item.malh.toLowerCase().includes(searchTerm.toLowerCase()) || item.mamh?.toLowerCase().includes(searchTerm.toLowerCase()));
 
     return (
         <div className={cx("wrapper")}>
             <div className="container">
                 <h2 className={cx("title")}>Danh sách lớp mở đăng ký</h2>
-                <input
-                    type="text"
-                    placeholder="Nhập mã lớp hoặc mã môn học để tìm kiếm..."
-                    className={cx("search-input", "full-width")}
-                    value={searchTerm}
-                    onChange={handleSearch}
-                />
+                <input type="text" placeholder="Nhập mã lớp hoặc mã môn học để tìm kiếm..." className={cx("search-input", "full-width")} value={searchTerm} onChange={handleSearch} />
                 <table className={cx("table")}>
                     <thead>
                         <tr>
@@ -184,13 +163,7 @@ function ClassList() {
                                 })}
                             >
                                 <td className={cx("td")}>
-                                    <input
-                                        type="checkbox"
-                                        className={cx("checkbox-small")}
-                                        checked={!!selectedClasses[item.malh]}
-                                        disabled={!!disabledClasses[item.malh]}
-                                        onChange={() => toggleSelection(item)}
-                                    />
+                                    <input type="checkbox" className={cx("checkbox-small")} checked={!!selectedClasses[item.malh]} disabled={!!disabledClasses[item.malh]} onChange={() => toggleSelection(item)} />
                                 </td>
                                 <td className={cx("td")}>{item.malh}</td>
                                 <td className={cx("td")}>{item.mamh}</td>

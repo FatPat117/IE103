@@ -1,30 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-    Layout,
-    Table,
-    Button,
-    Space,
-    Typography,
-    Card,
-    Spin,
-    message,
-    Modal,
-    Form,
-    Input,
-    Select,
-    DatePicker,
-} from "antd";
+import { Layout, Table, Button, Space, Typography, Card, Spin, Modal, Form, Input, Select, DatePicker } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import styles from "./Admin.module.scss";
-import {
-    getAllUsersAPI,
-    createStudentAPI,
-    getUserByIdAPI,
-    updateStudentAPI,
-    deleteUserAPI,
-    getAllMajorsAPI,
-} from "../../services/api.service";
+import { getAllUsersAPI, createStudentAPI, getUserByIdAPI, updateStudentAPI, deleteUserAPI, getAllMajorsAPI } from "../../services/api.service";
 import moment from "moment";
+import { showErrorNotification } from "~/utils/showErrorNotification";
+import { notifySuccess } from "~/utils/notifications";
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -42,9 +23,6 @@ const Students = () => {
         setLoading(true);
         try {
             const data = await getAllUsersAPI();
-
-            console.log(data);
-
             const filtered = data.filter((student) => student.role === 1);
 
             const formatted = filtered.map((student) => ({
@@ -62,7 +40,7 @@ const Students = () => {
             setStudents(formatted);
         } catch (err) {
             console.error("Lỗi khi lấy danh sách sinh viên:", err);
-            message.error("Không thể tải danh sách sinh viên.");
+            showErrorNotification("Không thể tải danh sách sinh viên");
         } finally {
             setLoading(false);
         }
@@ -71,11 +49,10 @@ const Students = () => {
     const fetchMajors = async () => {
         try {
             const data = await getAllMajorsAPI();
-
             setMajors(data);
         } catch (err) {
             console.error("Lỗi khi lấy danh sách ngành:", err);
-            console.log("Không thể tải danh sách ngành.");
+            showErrorNotification("Không thể tải danh sách ngành");
         }
     };
 
@@ -94,7 +71,7 @@ const Students = () => {
                 dateOfBirth: user.dateOfBirth ? moment(user.dateOfBirth) : null,
             });
         } catch (err) {
-            message.error("Không thể lấy thông tin người dùng: " + err.message);
+            showErrorNotification("Không thể lấy thông tin người dùng", err.message);
         }
     };
 
@@ -112,13 +89,13 @@ const Students = () => {
 
         try {
             await createStudentAPI(payload);
-            message.success("Tạo người dùng thành công!");
+            notifySuccess("Tạo người dùng thành công!");
             form.resetFields();
             setModalOpen(false);
             fetchStudents();
         } catch (err) {
-            console.error("Lỗi khi tạo người dùng:", err.response || err.message);
-            message.error("Tạo người dùng thất bại: " + (err.response?.data?.message || err.message));
+            console.error("Lỗi khi tạo người dùng:", err);
+            showErrorNotification("Tạo người dùng thất bại", err.response?.data?.message || err.message);
         }
     };
 
@@ -132,17 +109,15 @@ const Students = () => {
             manganh: values.manganh,
         };
 
-        console.log(payload);
-
         try {
             await updateStudentAPI(editingUser.id, payload);
-            message.success("Cập nhật người dùng thành công!");
+            notifySuccess("Cập nhật người dùng thành công!");
             form.resetFields();
             setModalOpen(false);
             setEditingUser(null);
             fetchStudents();
         } catch (err) {
-            message.error("Lỗi cập nhật người dùng: " + err.message);
+            showErrorNotification("Lỗi cập nhật người dùng", err.message);
         }
     };
 
@@ -156,10 +131,10 @@ const Students = () => {
             onOk: async () => {
                 try {
                     await deleteUserAPI(userId);
-                    message.success("Xóa sinh viên thành công!");
+                    notifySuccess("Xóa sinh viên thành công!");
                     fetchStudents();
                 } catch (err) {
-                    message.error("Xóa sinh viên thất bại: " + (err.message || "Lỗi không xác định"));
+                    showErrorNotification("Xóa sinh viên thất bại", err.message || "Lỗi không xác định");
                 }
             },
         });
@@ -202,21 +177,10 @@ const Students = () => {
             align: "center",
             render: (text, record) => (
                 <Space>
-                    <Button
-                        type="primary"
-                        icon={<EditOutlined />}
-                        className={styles.editBtn}
-                        onClick={() => handleEditStudent(record.id)}
-                    >
+                    <Button type="primary" icon={<EditOutlined />} className={styles.editBtn} onClick={() => handleEditStudent(record.id)}>
                         Sửa
                     </Button>
-                    <Button
-                        type="primary"
-                        danger
-                        icon={<DeleteOutlined />}
-                        className={styles.deleteBtn}
-                        onClick={() => handleDeleteStudent(record.id)}
-                    >
+                    <Button type="primary" danger icon={<DeleteOutlined />} className={styles.deleteBtn} onClick={() => handleDeleteStudent(record.id)}>
                         Xóa
                     </Button>
                 </Space>
@@ -256,64 +220,36 @@ const Students = () => {
                     cancelText="Hủy"
                 >
                     <Form form={form} layout="vertical" onFinish={editingUser ? handleUpdateStudent : handleAddStudent}>
-                        <Form.Item
-                            label="Email"
-                            name="email"
-                            rules={[{ required: true, message: "Vui lòng nhập email" }]}
-                        >
+                        <Form.Item label="Email" name="email" rules={[{ required: true, message: "Vui lòng nhập email" }]}>
                             <Input />
                         </Form.Item>
 
                         {!editingUser && (
-                            <Form.Item
-                                label="Mật khẩu"
-                                name="password"
-                                rules={[{ required: true, message: "Vui lòng nhập mật khẩu" }]}
-                            >
+                            <Form.Item label="Mật khẩu" name="password" rules={[{ required: true, message: "Vui lòng nhập mật khẩu" }]}>
                                 <Input.Password />
                             </Form.Item>
                         )}
 
-                        <Form.Item
-                            label="Họ và tên"
-                            name="name"
-                            rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
-                        >
+                        <Form.Item label="Họ và tên" name="name" rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}>
                             <Input />
                         </Form.Item>
 
-                        <Form.Item
-                            label="Giới tính"
-                            name="sex"
-                            rules={[{ required: true, message: "Vui lòng chọn giới tính" }]}
-                        >
+                        <Form.Item label="Giới tính" name="sex" rules={[{ required: true, message: "Vui lòng chọn giới tính" }]}>
                             <Select>
                                 <Option value="Nam">Nam</Option>
                                 <Option value="Nu">Nữ</Option>
                             </Select>
                         </Form.Item>
 
-                        <Form.Item
-                            label="Ngày sinh"
-                            name="dateOfBirth"
-                            rules={[{ required: true, message: "Vui lòng chọn ngày sinh" }]}
-                        >
+                        <Form.Item label="Ngày sinh" name="dateOfBirth" rules={[{ required: true, message: "Vui lòng chọn ngày sinh" }]}>
                             <DatePicker style={{ width: "100%" }} />
                         </Form.Item>
 
-                        <Form.Item
-                            label="Mã số sinh viên"
-                            name="ms"
-                            rules={[{ required: true, message: "Vui lòng nhập mã số sinh viên" }]}
-                        >
+                        <Form.Item label="Mã số sinh viên" name="ms" rules={[{ required: true, message: "Vui lòng nhập mã số sinh viên" }]}>
                             <Input />
                         </Form.Item>
 
-                        <Form.Item
-                            label="Mã ngành"
-                            name="manganh"
-                            rules={[{ required: true, message: "Vui lòng nhập mã ngành" }]}
-                        >
+                        <Form.Item label="Mã ngành" name="manganh" rules={[{ required: true, message: "Vui lòng nhập mã ngành" }]}>
                             <Select placeholder="Chọn ngành">
                                 {majors.map((major) => (
                                     <Select.Option key={major.maNganh} value={major.maNganh}>

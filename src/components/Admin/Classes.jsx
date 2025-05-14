@@ -1,31 +1,12 @@
 import { useEffect, useState } from "react";
-import {
-    Layout,
-    Table,
-    Button,
-    Space,
-    Typography,
-    Card,
-    Upload,
-    message,
-    Modal,
-    Form,
-    Input,
-    DatePicker,
-    InputNumber,
-    Select,
-} from "antd";
+import { Layout, Table, Button, Space, Typography, Card, Upload, message, Modal, Form, Input, DatePicker, InputNumber, Select } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
-import {
-    getAllClassesAPI,
-    createClassByExcelAPI,
-    deleteClassAPI,
-    getClassByIdAPI,
-    updateClassByIdAPI,
-} from "../../services/api.service";
+import { getAllClassesAPI, createClassByExcelAPI, deleteClassAPI, getClassByIdAPI, updateClassByIdAPI } from "../../services/api.service";
 
 import dayjs from "dayjs";
 import styles from "./Admin.module.scss";
+import { showErrorNotification } from "~/utils/showErrorNotification";
+import { notifySuccess } from "~/utils/notifications";
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -51,7 +32,7 @@ const Classes = () => {
                 })) || [];
             setClasses(classList);
         } catch (error) {
-            message.error(error.message);
+            showErrorNotification("Lỗi khi lấy danh sách lớp học", error.message);
         } finally {
             setLoading(false);
         }
@@ -64,10 +45,10 @@ const Classes = () => {
             onOk: async () => {
                 try {
                     await deleteClassAPI(id);
-                    message.success("Xoá lớp học thành công");
+                    notifySuccess("Xoá lớp học thành công");
                     fetchClasses();
                 } catch (error) {
-                    message.error(error.message);
+                    showErrorNotification("Lỗi khi xoá lớp học", error.message);
                 }
             },
         });
@@ -76,10 +57,10 @@ const Classes = () => {
     const handleUpload = async ({ file }) => {
         try {
             await createClassByExcelAPI(file);
-            message.success("Tải lên thành công");
+            notifySuccess("Tải lên thành công");
             fetchClasses();
         } catch (error) {
-            message.error(error.message);
+            showErrorNotification("Lỗi khi tải file Excel", error.message);
         }
     };
 
@@ -93,7 +74,7 @@ const Classes = () => {
                 ngayKetThuc: dayjs(classData.ngayKetThuc),
             });
         } catch (error) {
-            message.error(error.message);
+            showErrorNotification("Lỗi khi lấy thông tin lớp học", error.message);
         }
     };
 
@@ -107,11 +88,11 @@ const Classes = () => {
                 ngayKetThuc: values.ngayKetThuc.format("YYYY-MM-DD"),
             };
             await updateClassByIdAPI(editingClass.malh, updatedData);
-            message.success("Cập nhật lớp học thành công");
+            notifySuccess("Cập nhật lớp học thành công");
             setEditingClass(null);
             fetchClasses();
         } catch (error) {
-            message.error(error.message);
+            showErrorNotification("Lỗi khi cập nhật lớp học", error.message);
         }
     };
 
@@ -162,14 +143,7 @@ const Classes = () => {
                 </Card>
             </Content>
 
-            <Modal
-                title="Chỉnh sửa lớp học"
-                open={!!editingClass}
-                onCancel={() => setEditingClass(null)}
-                onOk={handleEditSubmit}
-                okText="Lưu"
-                cancelText="Huỷ"
-            >
+            <Modal title="Chỉnh sửa lớp học" open={!!editingClass} onCancel={() => setEditingClass(null)} onOk={handleEditSubmit} okText="Lưu" cancelText="Huỷ">
                 <Form form={form} layout="vertical">
                     <Form.Item name="tenMH" label="Tên môn học" rules={[{ required: true }]}>
                         <Input />

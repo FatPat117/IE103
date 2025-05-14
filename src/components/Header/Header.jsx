@@ -5,43 +5,53 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import logo from "../../assets/image/logo.png";
-import avatar from "../../assets/image/avatar.jpg";
+import avatar from "../../assets/image/avatar.png";
 
 import { faEnvelope, faGraduationCap, faSignOut, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Tippy from "@tippyjs/react/headless";
 
 import { getUserAPI, logoutAPI } from "~/services/api.service";
+import { showConfirmModal } from "../../utils/confirmModal";
 
 const cx = classNames.bind(styles);
 
 function Header() {
     const [activeLink, setActiveLink] = useState(() => sessionStorage.getItem("activeLink") || "dashboard");
     const [userDetails, setUserDetails] = useState(null);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleLogout = async () => {
-        const confirmLogout = window.confirm("Bạn có chắc chắn muốn đăng xuất?");
-        if (!confirmLogout) return;
+    const handleLogout = () => {
+        showConfirmModal({
+            title: "Xác nhận đăng xuất",
+            content: "Bạn có chắc chắn muốn đăng xuất?",
+            okText: "Đăng xuất",
+            okType: "danger",
+            onOk: async () => {
+                try {
+                    const user = JSON.parse(sessionStorage.getItem("user"));
 
-        try {
-            const user = JSON.parse(sessionStorage.getItem("user"));
+                    if (!user || !user.email) {
+                        showErrorNotification("Không tìm thấy thông tin người dùng!");
+                        return;
+                    }
 
-            if (!user || !user.email) {
-                alert("Không tìm thấy thông tin người dùng!");
-                return;
-            }
+                    setLoading(true);
+                    const res = await logoutAPI(user.email);
 
-            const res = await logoutAPI(user.email);
-
-            if (res) {
-                sessionStorage.clear();
-                localStorage.clear();
-                navigate("/login");
-            }
-        } catch (error) {
-            alert("Lỗi đăng xuất: " + error.message);
-        }
+                    if (res) {
+                        sessionStorage.clear();
+                        localStorage.clear();
+                        navigate("/login");
+                    }
+                } catch (error) {
+                    showErrorNotification("Lỗi đăng xuất", error.message);
+                } finally {
+                    setLoading(false);
+                }
+            },
+        });
     };
 
     const handleNavClick = (link) => {
@@ -91,38 +101,22 @@ function Header() {
                     <nav className={cx("navbar")}>
                         <ul className={cx("navbar__list")}>
                             <li className={cx("navbar__item")}>
-                                <Link
-                                    to="/dashboard"
-                                    className={cx("navbar__link", { active: activeLink === "dashboard" })}
-                                    onClick={() => handleNavClick("dashboard")}
-                                >
+                                <Link to="/dashboard" className={cx("navbar__link", { active: activeLink === "dashboard" })} onClick={() => handleNavClick("dashboard")}>
                                     Dashboard
                                 </Link>
                             </li>
                             <li className={cx("navbar__item")}>
-                                <Link
-                                    to="/dang-ky-hoc-phan"
-                                    className={cx("navbar__link", { active: activeLink === "dang-ky-hoc-phan" })}
-                                    onClick={() => handleNavClick("dang-ky-hoc-phan")}
-                                >
+                                <Link to="/dang-ky-hoc-phan" className={cx("navbar__link", { active: activeLink === "dang-ky-hoc-phan" })} onClick={() => handleNavClick("dang-ky-hoc-phan")}>
                                     Đăng ký học phần
                                 </Link>
                             </li>
                             <li className={cx("navbar__item")}>
-                                <Link
-                                    to="/xac-nhan-hoc-phan"
-                                    className={cx("navbar__link", { active: activeLink === "xac-nhan-hoc-phan" })}
-                                    onClick={() => handleNavClick("xac-nhan-hoc-phan")}
-                                >
+                                <Link to="/xac-nhan-hoc-phan" className={cx("navbar__link", { active: activeLink === "xac-nhan-hoc-phan" })} onClick={() => handleNavClick("xac-nhan-hoc-phan")}>
                                     Xác nhận đăng ký học phần
                                 </Link>
                             </li>
                             <li className={cx("navbar__item")}>
-                                <Link
-                                    to="/danh-sach-lop"
-                                    className={cx("navbar__link", { active: activeLink === "danh-sach-lop" })}
-                                    onClick={() => handleNavClick("danh-sach-lop")}
-                                >
+                                <Link to="/danh-sach-lop" className={cx("navbar__link", { active: activeLink === "danh-sach-lop" })} onClick={() => handleNavClick("danh-sach-lop")}>
                                     Danh sách lớp đã đăng ký
                                 </Link>
                             </li>
@@ -174,17 +168,13 @@ function Header() {
                                         <span className={cx("icon")}>
                                             <FontAwesomeIcon icon={faSignOut} />
                                         </span>
-                                        <span className={cx("title")}>Thoát</span>
+                                        <span className={cx("title")}>Đăng Xuất</span>
                                     </button>
                                 </div>
                             )}
                         >
                             <div className={cx("user_details")}>
-                                {userDetails ? (
-                                    <p className={cx("user__name")}>{userDetails.name}</p>
-                                ) : (
-                                    <p>Đang tải...</p>
-                                )}
+                                {userDetails ? <p className={cx("user__name")}>{userDetails.name}</p> : <p>Đang tải...</p>}
                                 <img src={avatar} className={cx("user__avatar")} alt="Avatar" />
                             </div>
                         </Tippy>
