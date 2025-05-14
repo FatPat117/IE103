@@ -20,11 +20,10 @@ const periods = [
 
 const days = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
 
-const getDayString = (thu) => `Thứ ${thu}`; 
+const getDayString = (thu) => `Thứ ${thu}`;
 
 function Schedule() {
     const [scheduleData, setScheduleData] = useState([]);
-    const [hovered, setHovered] = useState(null);
 
     useEffect(() => {
         const fetchSchedule = async () => {
@@ -42,6 +41,7 @@ function Schedule() {
                     tietKetThuc: item.tietKetThuc,
                     thu: item.thu,
                     day: getDayString(item.thu),
+                    siso: item.soLuongSinhVienToiDa,
                 }));
                 setScheduleData(courses);
             }
@@ -83,19 +83,11 @@ function Schedule() {
 
                                 if (course) {
                                     return (
-                                        <td
-                                            key={day}
-                                            rowSpan={course.rowSpan}
-                                            className={cx("schedule__course")}
-                                            onMouseEnter={() => setHovered(course.subject)}
-                                            onMouseLeave={() => setHovered(null)}
-                                        >
+                                        <td key={day} rowSpan={course.rowSpan} className={cx("schedule__course")}>
                                             <strong className={cx("course-code")}>{course.room}</strong>
-                                            <br />
+                                            <span className={cx("student-count")}>Sĩ số: {course.siso}</span>
                                             <span className={cx("course-title")}>{course.subject}</span>
-                                            <br />
                                             <span className={cx("teacher-name")}>{course.teacher}</span>
-                                            <br />
                                             {course.start && course.end && (
                                                 <span className={cx("course-date")}>
                                                     BD: {course.start}
@@ -103,16 +95,9 @@ function Schedule() {
                                                     KT: {course.end}
                                                 </span>
                                             )}
-                                            {hovered === course.subject && (
-                                                <span className={cx("delete-icon")}>🗑️</span>
-                                            )}
                                         </td>
                                     );
-                                } else if (
-                                    mergedCourses.some(
-                                        (c) => c.startPeriodIndex < periodIndex && c.endPeriodIndex > periodIndex
-                                    )
-                                ) {
+                                } else if (mergedCourses.some((c) => c.startPeriodIndex < periodIndex && c.endPeriodIndex > periodIndex)) {
                                     return null;
                                 } else {
                                     return <td key={day}></td>;

@@ -10,34 +10,28 @@ const cx = classNames.bind(styles);
 function Login() {
     const [studentId, setStudentId] = useState("");
     const [password, setPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setErrorMessage("");
 
         try {
             const res = await loginAPI(studentId, password, true);
-
-            
-
-            if (res) {
-                localStorage.setItem("studentId", res.id);
+            localStorage.setItem("studentId", res.id);
+            const role = res.role;
+            if (role === "SINHVIEN") {
                 setTimeout(() => {
                     navigate("/dashboard");
                 }, 100);
-            } else {
-                alert("Mã số sinh viên hoặc mật khẩu không đúng!");
-            }
-
-            if (res) {
+            } else if (role === "ADMIN") {
                 setTimeout(() => {
-                    navigate("/dashboard");
+                    navigate("/admin");
                 }, 100);
-            } else {
-                alert("Mã số sinh viên hoặc mật khẩu không đúng!");
             }
         } catch (error) {
-            alert("Lỗi đăng nhập: " + error.message);
+            setErrorMessage("Mã số sinh viên hoặc mật khẩu không đúng!");
         }
     };
 
@@ -49,20 +43,9 @@ function Login() {
                         <img src={logo_header} alt="Logo UIT" className={cx("logo")} />
                     </div>
                     <form onSubmit={handleLogin}>
-                        <input
-                            type="text"
-                            placeholder="Mã số sinh viên"
-                            required
-                            value={studentId}
-                            onChange={(e) => setStudentId(e.target.value)}
-                        />
-                        <input
-                            type="password"
-                            placeholder="Mật khẩu"
-                            required
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
+                        <input type="text" placeholder="Mã số sinh viên" required value={studentId} onChange={(e) => setStudentId(e.target.value)} />
+                        <input type="password" placeholder="Mật khẩu" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                        {errorMessage && <div className={cx("error-message")}>{errorMessage}</div>} {/* Hiển thị lỗi nếu có */}
                         <button className={cx("login-btn")} type="submit">
                             Đăng nhập
                         </button>

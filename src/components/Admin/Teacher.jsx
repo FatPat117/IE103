@@ -1,30 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-    Layout,
-    Table,
-    Button,
-    Space,
-    Typography,
-    Card,
-    Spin,
-    message,
-    Modal,
-    Form,
-    Input,
-    Select,
-    DatePicker,
-} from "antd";
+import { Layout, Table, Button, Space, Typography, Card, Spin, Modal, Form, Input, Select, DatePicker } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import styles from "./Admin.module.scss";
-import {
-    getAllUsersAPI,
-    createTeacherAPI,
-    getUserByIdAPI,
-    updateTeacherAPI,
-    getAllDepartmentsAPI,
-    deleteUserAPI,
-} from "../../services/api.service";
+import { getAllUsersAPI, createTeacherAPI, getUserByIdAPI, updateTeacherAPI, getAllDepartmentsAPI, deleteUserAPI } from "../../services/api.service";
 import moment from "moment";
+import { showErrorNotification } from "~/utils/showErrorNotification";
+import { notifySuccess } from "~/utils/notifications";
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -59,7 +40,7 @@ const Teachers = () => {
             setTeachers(formatted);
         } catch (err) {
             console.error("Lỗi khi lấy danh sách giảng viên:", err);
-            message.error("Không thể tải danh sách giảng viên.");
+            showErrorNotification("Không thể tải danh sách giảng viên", err.response?.data?.message || err.message);
         } finally {
             setLoading(false);
         }
@@ -70,7 +51,7 @@ const Teachers = () => {
             const data = await getAllDepartmentsAPI();
             setDepartments(data);
         } catch (err) {
-            message.error("Không thể tải danh sách khoa.");
+            showErrorNotification("Không thể tải danh sách khoa", err.response?.data?.message || err.message);
             console.error("Lỗi khi lấy khoa:", err);
         }
     };
@@ -91,7 +72,7 @@ const Teachers = () => {
                 dateOfBirth: user.dateOfBirth ? moment(user.dateOfBirth) : null,
             });
         } catch (err) {
-            message.error("Không thể lấy thông tin người dùng: " + err.message);
+            showErrorNotification("Không thể lấy thông tin người dùng", err.response?.data?.message || err.message);
         }
     };
 
@@ -109,13 +90,13 @@ const Teachers = () => {
 
         try {
             await createTeacherAPI(payload);
-            message.success("Tạo tài khoản giảng viên thành công!");
+            notifySuccess("Tạo tài khoản giảng viên thành công");
             form.resetFields();
             setModalOpen(false);
             fetchTeachers();
         } catch (err) {
             console.error("Lỗi khi tạo giảng viên:", err.response || err.message);
-            message.error("Tạo tài khoản thất bại: " + (err.response?.data?.message || err.message));
+            showErrorNotification("Tạo tài khoản thất bại", err.response?.data?.message || err.message);
         }
     };
 
@@ -131,13 +112,13 @@ const Teachers = () => {
 
         try {
             await updateTeacherAPI(editingUser.id, payload);
-            message.success("Cập nhật tài khoản giảng viên thành công!");
+            notifySuccess("Cập nhật tài khoản giảng viên thành công");
             form.resetFields();
             setModalOpen(false);
             setEditingUser(null);
             fetchTeachers();
         } catch (err) {
-            message.error("Lỗi cập nhật: " + err.message);
+            showErrorNotification("Cập nhật thất bại", err.response?.data?.message || err.message);
         }
     };
 
@@ -150,11 +131,11 @@ const Teachers = () => {
             onOk: async () => {
                 try {
                     await deleteUserAPI(userId);
-                    message.success("Xóa giảng viên thành công!");
+                    notifySuccess("Xóa giảng viên thành công");
                     fetchTeachers();
                 } catch (err) {
                     console.error("Lỗi khi xóa giảng viên:", err);
-                    message.error("Xóa giảng viên thất bại: " + err.message);
+                    showErrorNotification("Xóa giảng viên thất bại", err.response?.data?.message || err.message);
                 }
             },
         });
@@ -197,21 +178,10 @@ const Teachers = () => {
             align: "center",
             render: (text, record) => (
                 <Space>
-                    <Button
-                        type="primary"
-                        icon={<EditOutlined />}
-                        className={styles.editBtn}
-                        onClick={() => handleEditTeacher(record.id)}
-                    >
+                    <Button type="primary" icon={<EditOutlined />} className={styles.editBtn} onClick={() => handleEditTeacher(record.id)}>
                         Sửa
                     </Button>
-                    <Button
-                        type="primary"
-                        danger
-                        icon={<DeleteOutlined />}
-                        className={styles.deleteBtn}
-                        onClick={() => handleDeleteTeacher(record.id)}
-                    >
+                    <Button type="primary" danger icon={<DeleteOutlined />} className={styles.deleteBtn} onClick={() => handleDeleteTeacher(record.id)}>
                         Xóa
                     </Button>
                 </Space>
@@ -251,64 +221,36 @@ const Teachers = () => {
                     cancelText="Hủy"
                 >
                     <Form form={form} layout="vertical" onFinish={editingUser ? handleUpdateTeacher : handleAddTeacher}>
-                        <Form.Item
-                            label="Email"
-                            name="email"
-                            rules={[{ required: true, message: "Vui lòng nhập email" }]}
-                        >
+                        <Form.Item label="Email" name="email" rules={[{ required: true, message: "Vui lòng nhập email" }]}>
                             <Input />
                         </Form.Item>
 
                         {!editingUser && (
-                            <Form.Item
-                                label="Mật khẩu"
-                                name="password"
-                                rules={[{ required: true, message: "Vui lòng nhập mật khẩu" }]}
-                            >
+                            <Form.Item label="Mật khẩu" name="password" rules={[{ required: true, message: "Vui lòng nhập mật khẩu" }]}>
                                 <Input.Password />
                             </Form.Item>
                         )}
 
-                        <Form.Item
-                            label="Họ và tên"
-                            name="name"
-                            rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
-                        >
+                        <Form.Item label="Họ và tên" name="name" rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}>
                             <Input />
                         </Form.Item>
 
-                        <Form.Item
-                            label="Giới tính"
-                            name="sex"
-                            rules={[{ required: true, message: "Vui lòng chọn giới tính" }]}
-                        >
+                        <Form.Item label="Giới tính" name="sex" rules={[{ required: true, message: "Vui lòng chọn giới tính" }]}>
                             <Select>
                                 <Option value="Nam">Nam</Option>
                                 <Option value="Nữ">Nữ</Option>
                             </Select>
                         </Form.Item>
 
-                        <Form.Item
-                            label="Ngày sinh"
-                            name="dateOfBirth"
-                            rules={[{ required: true, message: "Vui lòng chọn ngày sinh" }]}
-                        >
+                        <Form.Item label="Ngày sinh" name="dateOfBirth" rules={[{ required: true, message: "Vui lòng chọn ngày sinh" }]}>
                             <DatePicker style={{ width: "100%" }} />
                         </Form.Item>
 
-                        <Form.Item
-                            label="Mã số giảng viên"
-                            name="ms"
-                            rules={[{ required: true, message: "Vui lòng nhập mã số giảng viên" }]}
-                        >
+                        <Form.Item label="Mã số giảng viên" name="ms" rules={[{ required: true, message: "Vui lòng nhập mã số giảng viên" }]}>
                             <Input />
                         </Form.Item>
 
-                        <Form.Item
-                            label="Mã Khoa"
-                            name="makhoa"
-                            rules={[{ required: true, message: "Vui lòng chọn khoa" }]}
-                        >
+                        <Form.Item label="Mã Khoa" name="makhoa" rules={[{ required: true, message: "Vui lòng chọn khoa" }]}>
                             <Select placeholder="Chọn khoa">
                                 {departments.map((dept) => (
                                     <Option key={dept.makhoa} value={dept.makhoa}>
