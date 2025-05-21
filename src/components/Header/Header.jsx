@@ -102,7 +102,7 @@ function Header() {
                         <ul className={cx("navbar__list")}>
                             <li className={cx("navbar__item")}>
                                 <Link to="/dashboard" className={cx("navbar__link", { active: activeLink === "dashboard" })} onClick={() => handleNavClick("dashboard")}>
-                                    Dashboard
+                                    Trang chủ
                                 </Link>
                             </li>
                             <li className={cx("navbar__item")}>
@@ -138,7 +138,7 @@ function Header() {
                                                 <span className={cx("icon")}>
                                                     <FontAwesomeIcon icon={faUser} />
                                                 </span>
-                                                <span className={cx("title")}>Admin Dashboard</span>
+                                                <span className={cx("title")}>Bảng điều khiển</span>
                                             </button>
                                         </Link>
                                     ) : userDetails ? (
