@@ -131,7 +131,7 @@ export const getUserByIdAPI = async (userId) => {
         const accessToken = sessionStorage.getItem("accessToken");
         if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
 
-        const response = await axios.get(`/admin/user/${userId}`, {
+        const response = await axios.get(`/user/${userId}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
@@ -528,6 +528,26 @@ export const removeClassFromRegistrationAPI = async (registrationId, classId) =>
     } catch (error) {
         handleAPIError(error, {
             404: "Không tìm thấy phiếu đăng ký hoặc lớp học.",
+        });
+    }
+};
+
+// lấy ra phiếu đăng ký theo mã sinh viên
+export const getRegistrationFormByStudentIdAPI = async (studentId) => {
+    try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("Không tìm thấy access token trong sessionStorage");
+
+        const response = await axios.get(`/registration-forms/student/${studentId}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        handleAPIError(error, {
+            404: "Không tìm thấy phiếu đăng ký cho sinh viên này.",
         });
     }
 };

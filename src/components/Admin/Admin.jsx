@@ -83,7 +83,7 @@ const Admin = () => {
                         textAlign: "center",
                     }}
                 >
-                    Admin Panel
+                    Bảng chuyển hướng
                 </div>
                 <Menu
                     theme="dark"
@@ -93,7 +93,7 @@ const Admin = () => {
                         {
                             key: "/admin",
                             icon: <DashboardOutlined />,
-                            label: <Link to="/admin">Dashboard</Link>,
+                            label: <Link to="/admin">Bảng điều khiển</Link>,
                         },
                         {
                             key: "/admin/classes",
@@ -126,7 +126,7 @@ const Admin = () => {
                     }}
                 >
                     <div style={{ width: "100px" }}></div>
-                    <h1>Admin Dashboard</h1>
+                    <h1>Bảng điều khiển</h1>
                     {userRole === "ADMIN" && (
                         <Button type="primary" icon={<LogoutOutlined />} loading={loading} onClick={handleLogout}>
                             Đăng xuất

@@ -19,6 +19,7 @@ function Login() {
 
         try {
             const res = await loginAPI(studentId, password, true);
+
             localStorage.setItem("studentId", res.id);
             const role = res.role;
             if (role === "SINHVIEN") {

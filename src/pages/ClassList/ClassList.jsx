@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./ClassList.module.css";
-import { getAllClassesAPI, createRegistrationAPI, addClassToRegistrationAPI, removeClassFromRegistrationAPI, getRegistrationFormByIdAPI } from "~/services/api.service";
+import { getAllClassesAPI, createRegistrationAPI, addClassToRegistrationAPI, removeClassFromRegistrationAPI, getRegistrationFormByStudentIdAPI, getUserByIdAPI, getRegistrationFormByIdAPI } from "~/services/api.service";
 import { showErrorNotification } from "~/utils/showErrorNotification";
 const cx = classNames.bind(styles);
 
@@ -17,8 +17,12 @@ function ClassList() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const classes = await getAllClassesAPI();
+                const studentId = localStorage.getItem("studentId");
 
+                const info = await getUserByIdAPI(studentId);
+                const mssv = info.ms;
+
+                const classes = await getAllClassesAPI();
                 setClassData(classes);
 
                 if (!classes || classes.length === 0) {
@@ -26,21 +30,29 @@ function ClassList() {
                     return;
                 }
 
+                const currentSemester = classes[0].hocKi;
+                const currentYear = classes[0].namHoc;
+
                 let maPDK = localStorage.getItem("maPDK");
 
                 if (!maPDK) {
-                    const firstClass = classes[0];
-                    const newHocKi = firstClass.hocKi;
-                    const newNamHoc = firstClass.namHoc;
+                    const registrationForms = await getRegistrationFormByStudentIdAPI(mssv);
 
-                    const registration = await createRegistrationAPI({
-                        hocKi: newHocKi,
-                        namHoc: newNamHoc,
-                        soTinChi: 0,
-                        maSV: studentId,
-                    });
+                    const currentRegistrationForm = registrationForms.find((form) => form.hocKi === currentSemester && form.namHoc === currentYear);
 
-                    maPDK = registration.maPDK;
+                    if (currentRegistrationForm) {
+                        maPDK = currentRegistrationForm.maPDK;
+                    } else {
+                        const newRegistration = await createRegistrationAPI({
+                            hocKi: currentSemester,
+                            namHoc: currentYear,
+                            soTinChi: 0,
+                            maSV: studentId,
+                        });
+
+                        maPDK = newRegistration.maPDK;
+                    }
+
                     localStorage.setItem("maPDK", maPDK);
                 }
 
@@ -48,9 +60,8 @@ function ClassList() {
 
                 const registrationForm = await getRegistrationFormByIdAPI(maPDK);
 
-                // Tick lại các lớp đã chọn
                 const selected = {};
-                if (registrationForm.phieuDangKyLopHocList && Array.isArray(registrationForm.phieuDangKyLopHocList)) {
+                if (Array.isArray(registrationForm.phieuDangKyLopHocList)) {
                     registrationForm.phieuDangKyLopHocList.forEach((cls) => {
                         selected[cls.maLopHoc] = true;
                     });
@@ -63,7 +74,7 @@ function ClassList() {
         };
 
         fetchData();
-    }, [studentId]);
+    }, []);
 
     const handleSearch = (event) => {
         setSearchTerm(event.target.value);
