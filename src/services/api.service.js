@@ -41,17 +41,27 @@ export const loginAPI = async (username, password, rememberMe = "false") => {
             sessionStorage.setItem("accessToken", tokens.accessToken);
             sessionStorage.setItem("refreshToken", tokens.refreshToken);
             sessionStorage.setItem("userRole", role);
+
             return response.data;
         }
 
         throw new Error("Phản hồi từ server không hợp lệ.");
     } catch (error) {
-        handleAPIError(error, {
-            400: "Tài khoản sai định dạng!",
-            401: "Sai tài khoản hoặc mật khẩu!",
-        });
+        let message = "Đã xảy ra lỗi.";
+
+        if (error.response?.status === 400) {
+            message = "Tài khoản sai định dạng!";
+            
+        } else if (error.response?.status === 401) {
+            message = "Sai tài khoản hoặc mật khẩu!";           
+        }
+        else console.log(error.response?.status);   
+
+        throw new Error(message);
     }
 };
+
+
 
 // 2. Get User Info API
 export const getUserAPI = async () => {

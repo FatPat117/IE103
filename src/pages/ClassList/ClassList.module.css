@@ -56,3 +56,25 @@
     align-items: center;
 }
 
+.confirm-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.confirm-button {
+    background-color: #1890ff;
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-button:hover {
+    background-color: #40a9ff;
+}
+

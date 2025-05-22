@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import logo_header from "../../assets/image/logo_header.png";
 import styles from "../Login/Login.module.css";
 import { loginAPI } from "../../services/api.service";
+import { Eye, EyeOff } from "lucide-react";
 
 const cx = classNames.bind(styles);
 
@@ -11,6 +12,7 @@ function Login() {
     const [studentId, setStudentId] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
@@ -21,18 +23,16 @@ function Login() {
             const res = await loginAPI(studentId, password, true);
 
             localStorage.setItem("studentId", res.id);
-            const role = res.role;
-            if (role === "SINHVIEN") {
-                setTimeout(() => {
-                    navigate("/dashboard");
-                }, 100);
-            } else if (role === "ADMIN") {
-                setTimeout(() => {
-                    navigate("/admin");
-                }, 100);
+
+            if (res.role === "SINHVIEN") {
+                navigate("/dashboard");
+            } else if (res.role === "ADMIN") {
+                navigate("/admin");
+            } else {
+                setErrorMessage("Tài khoản không hợp lệ.");
             }
         } catch (error) {
-            setErrorMessage("Mã số sinh viên hoặc mật khẩu không đúng!");
+            setErrorMessage(error.message);
         }
     };
 
@@ -45,8 +45,15 @@ function Login() {
                     </div>
                     <form onSubmit={handleLogin}>
                         <input type="text" placeholder="Mã số sinh viên" required value={studentId} onChange={(e) => setStudentId(e.target.value)} />
-                        <input type="password" placeholder="Mật khẩu" required value={password} onChange={(e) => setPassword(e.target.value)} />
-                        {errorMessage && <div className={cx("error-message")}>{errorMessage}</div>} {/* Hiển thị lỗi nếu có */}
+
+                        <div className={cx("password-input-wrapper")}>
+                            <input type={showPassword ? "text" : "password"} placeholder="Mật khẩu" required value={password} onChange={(e) => setPassword(e.target.value)} className={cx("password-input")} />
+                            <button type="button" className={cx("toggle-password")} onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </div>
+
+                        {errorMessage && <div className={cx("error-message")}>{errorMessage}</div>}
                         <button className={cx("login-btn")} type="submit">
                             Đăng nhập
                         </button>
