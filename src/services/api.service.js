@@ -52,10 +52,9 @@ export const loginAPI = async (username, password, rememberMe = "false") => {
         if (error.response?.status === 400) {
             message = "Tài khoản sai định dạng!";
             
-        } else if (error.response?.status === 401) {
+        } else if (error.response?.status === 404) {
             message = "Sai tài khoản hoặc mật khẩu!";           
         }
-        else console.log(error.response?.status);   
 
         throw new Error(message);
     }
