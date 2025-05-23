@@ -1,26 +1,5 @@
 import axios from "./axios.customize";
 
-// Xử lý lỗi chung
-const handleAPIError = (error, customMessages = {}) => {
-    if (error.response) {
-        const { status, data } = error.response;
-        const message = data?.message || error.message || "Lỗi không xác định";
-
-        switch (status) {
-            case 400:
-                throw new Error(customMessages[400] || `Lỗi yêu cầu: ${message}`);
-            case 401:
-                throw new Error(customMessages[401] || `Token hết hạn: ${message}`);
-            case 404:
-                throw new Error(customMessages[404] || `Không tìm thấy: ${message}`);
-            default:
-                throw new Error(`Lỗi (${status}): ${message}`);
-        }
-    } else {
-        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
-    }
-};
-
 // 1. Login API
 export const loginAPI = async (username, password, rememberMe = "false") => {
     try {
@@ -47,16 +26,19 @@ export const loginAPI = async (username, password, rememberMe = "false") => {
 
         throw new Error("Phản hồi từ server không hợp lệ.");
     } catch (error) {
-        let message = "Đã xảy ra lỗi.";
 
-        if (error.response?.status === 400) {
-            message = "Tài khoản sai định dạng!";
-            
-        } else if (error.response?.status === 404) {
-            message = "Sai tài khoản hoặc mật khẩu!";           
+        if (error.response) {
+            if (error.response.status === 400) {
+                throw new Error("Tài khoản sai định dạng!");
+            }
+            if (error.response.status === 401) {
+                throw new Error("Sai tài khoản hoặc mật khẩu!");
+            }
         }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
 
-        throw new Error(message);
+       
+
     }
 };
 
@@ -76,11 +58,19 @@ export const getUserAPI = async () => {
 
         return response.data;
     } catch (error) {
-        handleAPIError(error, {
-            400: "Yêu cầu không hợp lệ khi lấy thông tin user.",
-            401: "Token hết hạn hoặc không hợp lệ.",
-            404: "Không tìm thấy thông tin người dùng.",
-        });
+        if (error.response) {
+            if (error.response.status === 400) {
+                throw new Error("Yêu cầu không hợp lệ khi lấy thông tin user.");
+            }
+            if (error.response.status === 401) {
+                throw new Error("Token hết hạn hoặc không hợp lệ.");
+            }
+            if (error.response.status === 404) {
+                throw new Error("Không tìm thấy thông tin người dùng.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -106,10 +96,16 @@ export const logoutAPI = async (email) => {
 
         throw new Error("Logout không thành công");
     } catch (error) {
-        handleAPIError(error, {
-            400: "Lỗi yêu cầu khi logout.",
-            401: "Token hết hạn.",
-        });
+        if (error.response) {
+            if (error.response.status === 400) {
+                throw new Error("Lỗi yêu cầu khi logout.");
+            }
+            if (error.response.status === 401) {
+                throw new Error("Token hết hạn.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -127,10 +123,16 @@ export const getAllUsersAPI = async () => {
 
         return response.data;
     } catch (error) {
-        handleAPIError(error, {
-            401: "Token hết hạn.",
-            404: "Không có user nào được tìm thấy.",
-        });
+        if (error.response) {
+            if (error.response.status === 401) {
+                throw new Error("Token hết hạn.");
+            }
+            if (error.response.status === 404) {
+                throw new Error("Không có user nào được tìm thấy.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -148,10 +150,16 @@ export const getUserByIdAPI = async (userId) => {
 
         return response.data;
     } catch (error) {
-        handleAPIError(error, {
-            401: "Token hết hạn.",
-            404: "Không tìm thấy người dùng.",
-        });
+        if (error.response) {
+            if (error.response.status === 401) {
+                throw new Error("Token hết hạn.");
+            }
+            if (error.response.status === 404) {
+                throw new Error("Không tìm thấy người dùng.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -174,15 +182,20 @@ export const createStudentAPI = async (data) => {
 
         throw new Error("Tạo người dùng không thành công.");
     } catch (error) {
-        handleAPIError(error, {
-            401: "Token hết hạn.",
-            404: "Role hoặc chuyên ngành không tồn tại.",
-        });
+        if (error.response) {
+            if (error.response.status === 401) {
+                throw new Error("Token hết hạn.");
+            }
+            if (error.response.status === 404) {
+                throw new Error("Role hoặc chuyên ngành không tồn tại.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
 // create teacher API
-
 export const createTeacherAPI = async (data) => {
     try {
         const accessToken = sessionStorage.getItem("accessToken");
@@ -201,10 +214,16 @@ export const createTeacherAPI = async (data) => {
 
         throw new Error("Tạo tài khoản giáo viên không thành công.");
     } catch (error) {
-        handleAPIError(error, {
-            401: "Token hết hạn.",
-            404: "Role hoặc khoa không tồn tại.",
-        });
+        if (error.response) {
+            if (error.response.status === 401) {
+                throw new Error("Token hết hạn.");
+            }
+            if (error.response.status === 404) {
+                throw new Error("Role hoặc khoa không tồn tại.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -227,10 +246,16 @@ export const updateStudentAPI = async (userId, data) => {
 
         throw new Error("Cập nhật thông tin người dùng không thành công.");
     } catch (error) {
-        handleAPIError(error, {
-            401: "Token hết hạn.",
-            404: "Mã ngành hoặc khoa không tồn tại.",
-        });
+        if (error.response) {
+            if (error.response.status === 401) {
+                throw new Error("Token hết hạn.");
+            }
+            if (error.response.status === 404) {
+                throw new Error("Mã ngành hoặc khoa không tồn tại.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -253,10 +278,16 @@ export const updateTeacherAPI = async (userId, data) => {
 
         throw new Error("Cập nhật thông tin giáo viên không thành công.");
     } catch (error) {
-        handleAPIError(error, {
-            401: "Token hết hạn.",
-            404: "Khoa ngành không tồn tại.",
-        });
+        if (error.response) {
+            if (error.response.status === 401) {
+                throw new Error("Token hết hạn.");
+            }
+            if (error.response.status === 404) {
+                throw new Error("Khoa ngành không tồn tại.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -279,10 +310,16 @@ export const deleteUserAPI = async (userId) => {
 
         throw new Error("Xóa sinh viên không thành công.");
     } catch (error) {
-        handleAPIError(error, {
-            401: "Token hết hạn.",
-            404: "Không tìm thấy sinh viên.",
-        });
+        if (error.response) {
+            if (error.response.status === 401) {
+                throw new Error("Token hết hạn.");
+            }
+            if (error.response.status === 404) {
+                throw new Error("Không tìm thấy sinh viên.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -300,10 +337,16 @@ export const getAllDepartmentsAPI = async () => {
 
         return response.data;
     } catch (error) {
-        handleAPIError(error, {
-            401: "Token hết hạn.",
-            404: "Không có khoa nào được tìm thấy.",
-        });
+        if (error.response) {
+            if (error.response.status === 401) {
+                throw new Error("Token hết hạn.");
+            }
+            if (error.response.status === 404) {
+                throw new Error("Không có khoa nào được tìm thấy.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -321,10 +364,16 @@ export const getAllMajorsAPI = async () => {
 
         return response.data;
     } catch (error) {
-        handleAPIError(error, {
-            401: "Token hết hạn.",
-            404: "Không có ngành nào được tìm thấy.",
-        });
+        if (error.response) {
+            if (error.response.status === 401) {
+                throw new Error("Token hết hạn.");
+            }
+            if (error.response.status === 404) {
+                throw new Error("Không có ngành nào được tìm thấy.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -342,14 +391,17 @@ export const getAllClassesAPI = async () => {
 
         return response.data;
     } catch (error) {
-        handleAPIError(error, {
-            500: "Lỗi máy chủ khi lấy danh sách lớp học.",
-        });
+        if (error.response) {
+            if (error.response.status === 500) {
+                throw new Error("Lỗi máy chủ khi lấy danh sách lớp học.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
 // get class by ID
-
 export const getClassByIdAPI = async (id) => {
     try {
         const accessToken = sessionStorage.getItem("accessToken");
@@ -363,9 +415,13 @@ export const getClassByIdAPI = async (id) => {
 
         return response.data;
     } catch (error) {
-        handleAPIError(error, {
-            404: "Không tìm thấy thông tin lớp học.",
-        });
+        if (error.response) {
+            if (error.response.status === 404) {
+                throw new Error("Không tìm thấy thông tin lớp học.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -387,11 +443,19 @@ export const createClassByExcelAPI = async (file) => {
 
         return response.data;
     } catch (error) {
-        handleAPIError(error, {
-            400: "File không hợp lệ hoặc sai định dạng.",
-            409: "Dữ liệu trùng với lớp học khác.",
-            404: "Mã liên quan không tồn tại.",
-        });
+        if (error.response) {
+            if (error.response.status === 400) {
+                throw new Error("File không hợp lệ hoặc sai định dạng.");
+            }
+            if (error.response.status === 409) {
+                throw new Error("Dữ liệu trùng với lớp học khác.");
+            }
+            if (error.response.status === 404) {
+                throw new Error("Mã liên quan không tồn tại.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -409,9 +473,13 @@ export const deleteClassAPI = async (id) => {
 
         return response.data;
     } catch (error) {
-        handleAPIError(error, {
-            404: "Không tìm thấy lớp học để xóa.",
-        });
+        if (error.response) {
+            if (error.response.status === 404) {
+                throw new Error("Không tìm thấy lớp học để xóa.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -429,9 +497,13 @@ export const updateClassByIdAPI = async (id, data) => {
 
         return response.data;
     } catch (error) {
-        handleAPIError(error, {
-            404: "Không tìm thấy lớp học để cập nhật.",
-        });
+        if (error.response) {
+            if (error.response.status === 404) {
+                throw new Error("Không tìm thấy lớp học để cập nhật.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -449,9 +521,13 @@ export const getAllRegistrationFormsAPI = async () => {
 
         return response.data;
     } catch (error) {
-        handleAPIError(error, {
-            404: "Không tìm thấy phiếu đăng ký nào.",
-        });
+        if (error.response) {
+            if (error.response.status === 404) {
+                throw new Error("Không tìm thấy phiếu đăng ký nào.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -471,9 +547,8 @@ export const createRegistrationAPI = async (data) => {
     } catch (error) {
         if (error.response?.status === 404) {
             throw new Error("Tạo phiếu đăng ký lỗi: Không tìm thấy lớp học hoặc sinh viên.");
-        } else {
-            throw new Error("Đã xảy ra lỗi khi tạo phiếu đăng ký.");
         }
+        throw new Error("Đã xảy ra lỗi khi tạo phiếu đăng ký.");
     }
 };
 
@@ -491,9 +566,13 @@ export const getRegistrationFormByIdAPI = async (id) => {
 
         return response.data;
     } catch (error) {
-        handleAPIError(error, {
-            404: "Không tìm thấy phiếu đăng ký.",
-        });
+        if (error.response) {
+            if (error.response.status === 404) {
+                throw new Error("Không tìm thấy phiếu đăng ký.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -515,9 +594,13 @@ export const addClassToRegistrationAPI = async (registrationId, classId) => {
 
         return response.data;
     } catch (error) {
-        handleAPIError(error, {
-            404: "Không tìm thấy phiếu đăng ký hoặc lớp học.",
-        });
+        if (error.response) {
+            if (error.response.status === 404) {
+                throw new Error("Không tìm thấy phiếu đăng ký hoặc lớp học.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -535,9 +618,13 @@ export const removeClassFromRegistrationAPI = async (registrationId, classId) =>
 
         return response.data;
     } catch (error) {
-        handleAPIError(error, {
-            404: "Không tìm thấy phiếu đăng ký hoặc lớp học.",
-        });
+        if (error.response) {
+            if (error.response.status === 404) {
+                throw new Error("Không tìm thấy phiếu đăng ký hoặc lớp học.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
 
@@ -555,8 +642,12 @@ export const getRegistrationFormByStudentIdAPI = async (studentId) => {
 
         return response.data;
     } catch (error) {
-        handleAPIError(error, {
-            404: "Không tìm thấy phiếu đăng ký cho sinh viên này.",
-        });
+        if (error.response) {
+            if (error.response.status === 404) {
+                throw new Error("Không tìm thấy phiếu đăng ký cho sinh viên này.");
+            }
+            throw new Error(error.response.data?.message || error.message || "Lỗi không xác định");
+        }
+        throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
     }
 };
