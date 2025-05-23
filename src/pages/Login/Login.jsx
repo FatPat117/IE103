@@ -32,7 +32,7 @@ function Login() {
                 }, 100);
             }
         } catch (error) {
-            setErrorMessage("Mã số sinh viên hoặc mật khẩu không đúng!");
+            setErrorMessage(error.message);
         }
     };
 
