@@ -73,4 +73,23 @@ input:focus {
     text-align: center;
 }
 
+.password-input-wrapper {
+    position: relative;
+}
+
+.password-input {
+    width: 100%;
+    padding-right: 40px; 
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 40%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
 

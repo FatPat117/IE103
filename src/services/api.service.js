@@ -20,11 +20,13 @@ export const loginAPI = async (username, password, rememberMe = "false") => {
             sessionStorage.setItem("accessToken", tokens.accessToken);
             sessionStorage.setItem("refreshToken", tokens.refreshToken);
             sessionStorage.setItem("userRole", role);
+
             return response.data;
         }
 
         throw new Error("Phản hồi từ server không hợp lệ.");
     } catch (error) {
+
         if (error.response) {
             if (error.response.status === 400) {
                 throw new Error("Tài khoản sai định dạng!");
@@ -34,8 +36,13 @@ export const loginAPI = async (username, password, rememberMe = "false") => {
             }
         }
         throw new Error("Lỗi mạng hoặc không lấy được phản hồi từ server.");
+
+       
+
     }
 };
+
+
 
 // 2. Get User Info API
 export const getUserAPI = async () => {

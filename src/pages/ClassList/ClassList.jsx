@@ -3,6 +3,8 @@ import classNames from "classnames/bind";
 import styles from "./ClassList.module.css";
 import { getAllClassesAPI, createRegistrationAPI, addClassToRegistrationAPI, removeClassFromRegistrationAPI, getRegistrationFormByStudentIdAPI, getUserByIdAPI, getRegistrationFormByIdAPI } from "~/services/api.service";
 import { showErrorNotification } from "~/utils/showErrorNotification";
+import { message } from "antd";
+
 const cx = classNames.bind(styles);
 
 function ClassList() {
@@ -14,38 +16,43 @@ function ClassList() {
 
     const studentId = localStorage.getItem("studentId");
 
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1; // getMonth() trả về 0-11
+    const currentYear = now.getFullYear();
+    const semester = currentMonth >= 6 ? 1 : 2;
+    const yearRange = semester === 1 ? `${currentYear}-${currentYear + 1}` : `${currentYear - 1}-${currentYear}`;
+
+    // lấy thông tin lớp và phiếu đăng ký để hiển thị
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const studentId = localStorage.getItem("studentId");
-
                 const info = await getUserByIdAPI(studentId);
                 const mssv = info.ms;
 
-                const classes = await getAllClassesAPI();
-                setClassData(classes);
+                const allClasses = await getAllClassesAPI();
 
-                if (!classes || classes.length === 0) {
-                    showErrorNotification("Không có lớp nào để đăng ký.");
+                const filtered = allClasses.filter((cls) => cls.hocKi === semester && cls.namHoc === yearRange);
+
+                setClassData(filtered);
+
+                if (!filtered || filtered.length === 0) {
+                    showErrorNotification("Không có lớp nào để đăng ký trong học kỳ hiện tại.");
                     return;
                 }
-
-                const currentSemester = classes[0].hocKi;
-                const currentYear = classes[0].namHoc;
 
                 let maPDK = localStorage.getItem("maPDK");
 
                 if (!maPDK) {
                     const registrationForms = await getRegistrationFormByStudentIdAPI(mssv);
 
-                    const currentRegistrationForm = registrationForms.find((form) => form.hocKi === currentSemester && form.namHoc === currentYear);
+                    const currentRegistrationForm = registrationForms.find((form) => form.hocKi === semester && form.namHoc === yearRange);
 
                     if (currentRegistrationForm) {
                         maPDK = currentRegistrationForm.maPDK;
                     } else {
                         const newRegistration = await createRegistrationAPI({
-                            hocKi: currentSemester,
-                            namHoc: currentYear,
+                            hocKi: semester,
+                            namHoc: yearRange,
                             soTinChi: 0,
                             maSV: studentId,
                         });
@@ -76,10 +83,12 @@ function ClassList() {
         fetchData();
     }, []);
 
+    // hàm tìm kiếm lớp học
     const handleSearch = (event) => {
         setSearchTerm(event.target.value);
     };
 
+    // hàm xử lý chọn/bỏ chọn lớp học
     const toggleSelection = async (selectedClass) => {
         const { malh } = selectedClass;
 
@@ -145,7 +154,39 @@ function ClassList() {
         }
     };
 
+    // hàm xử lý để cập nhật trạng thái các lớp học đã chọn
+    useEffect(() => {
+        const calculateDisabledClasses = () => {
+            const updatedDisabled = {};
+            const selectedIds = Object.keys(selectedClasses);
+
+            classData.forEach((cls) => {
+                for (const selectedId of selectedIds) {
+                    const selected = classData.find((c) => c.malh === selectedId);
+                    if (!selected) continue;
+
+                    const sameSubject = cls.mamh === selected.mamh;
+                    const sameDay = cls.thu === selected.thu;
+                    const timeOverlap = !(cls.tietKetThuc < selected.tietBatDau || cls.tietBatDau > selected.tietKetThuc);
+
+                    if (!selectedIds.includes(cls.malh) && (sameSubject || (sameDay && timeOverlap))) {
+                        updatedDisabled[cls.malh] = true;
+                    }
+                }
+            });
+
+            setDisabledClasses(updatedDisabled);
+        };
+
+        calculateDisabledClasses();
+    }, [selectedClasses, classData]);
+
     const filteredClasses = classData.filter((item) => item.malh.toLowerCase().includes(searchTerm.toLowerCase()) || item.mamh?.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    // hàm xác nhận đăng ký
+    const handleConfirmRegistration = () => {
+        message.success("Đăng ký thành công!");
+    };
 
     return (
         <div className={cx("wrapper")}>
@@ -186,6 +227,13 @@ function ClassList() {
                         ))}
                     </tbody>
                 </table>
+                {classData.length > 0 && (
+                    <div className={cx("confirm-container")}>
+                        <button onClick={handleConfirmRegistration} className={cx("confirm-button")}>
+                            Xác nhận đăng ký
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
