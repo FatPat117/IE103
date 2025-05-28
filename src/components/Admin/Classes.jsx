@@ -88,8 +88,6 @@ const Classes = () => {
                 ngayKetThuc: values.ngayKetThuc.format("YYYY-MM-DD"),
             };
 
-            console.log(updatedData);
-
             await updateClassByIdAPI(editingClass.malh, updatedData);
 
             notifySuccess("Cập nhật lớp học thành công");
@@ -149,15 +147,6 @@ const Classes = () => {
 
             <Modal title="Chỉnh sửa lớp học" open={!!editingClass} onCancel={() => setEditingClass(null)} onOk={handleEditSubmit} okText="Lưu" cancelText="Huỷ">
                 <Form form={form} layout="vertical">
-                    <Form.Item name="tenGV" label="Tên giảng viên" rules={[{ required: true }]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item name="mamh" label="Mã môn học" rules={[{ required: true }]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item name="magv" label="Mã giảng viên" rules={[{ required: true }]}>
-                        <Input />
-                    </Form.Item>
                     <Form.Item name="ngayBatDau" label="Ngày bắt đầu" rules={[{ required: true }]}>
                         <DatePicker format="YYYY-MM-DD" />
                     </Form.Item>

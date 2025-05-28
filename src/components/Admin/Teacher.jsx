@@ -66,6 +66,8 @@ const Teachers = () => {
         try {
             const user = await getUserByIdAPI(userId);
 
+            user.id = userId;
+
             setEditingUser(user);
             form.setFieldsValue({
                 ...user,
@@ -109,8 +111,6 @@ const Teachers = () => {
             makhoa: values.makhoa,
             ms: values.ms,
         };
-
-        console.log(payload);
 
         try {
             await updateTeacherAPI(editingUser.id, payload);

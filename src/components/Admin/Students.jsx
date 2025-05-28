@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Layout, Table, Button, Space, Typography, Card, Spin, Modal, Form, Input, Select, DatePicker } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import styles from "./Admin.module.scss";
@@ -24,7 +24,6 @@ const Students = () => {
         try {
             const data = await getAllUsersAPI();
             const filtered = data.filter((student) => student.role === 1);
-
             const formatted = filtered.map((student) => ({
                 key: student.id,
                 id: student.id,
@@ -36,10 +35,8 @@ const Students = () => {
                 roleName: student.role,
                 department: student.manganh,
             }));
-
             setStudents(formatted);
         } catch (err) {
-            console.error("Lỗi khi lấy danh sách sinh viên:", err);
             showErrorNotification("Không thể tải danh sách sinh viên");
         } finally {
             setLoading(false);
@@ -51,7 +48,6 @@ const Students = () => {
             const data = await getAllMajorsAPI();
             setMajors(data);
         } catch (err) {
-            console.error("Lỗi khi lấy danh sách ngành:", err);
             showErrorNotification("Không thể tải danh sách ngành");
         }
     };
@@ -62,16 +58,27 @@ const Students = () => {
     }, []);
 
     const handleEditStudent = async (userId) => {
-        setModalOpen(true);
         try {
+            setLoading(true);
             const user = await getUserByIdAPI(userId);
+            user.id = userId;
+
             setEditingUser(user);
+            form.resetFields();
             form.setFieldsValue({
-                ...user,
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                sex: user.sex,
+                ms: user.ms,
+                manganh: user.manganh,
                 dateOfBirth: user.dateOfBirth ? moment(user.dateOfBirth) : null,
             });
+            setModalOpen(true);
         } catch (err) {
-            showErrorNotification("Không thể lấy thông tin người dùng", err.message);
+            showErrorNotification("Không thể lấy thông tin sinh viên", err.message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -80,7 +87,7 @@ const Students = () => {
             email: values.email,
             password: values.password,
             name: values.name,
-            dateOfBirth: values.dateOfBirth.format("YYYY-MM-DD"),
+            dateOfBirth: values.dateOfBirth ? values.dateOfBirth.format("YYYY-MM-DD") : null,
             sex: values.sex,
             ms: values.ms,
             role: 1,
@@ -89,37 +96,39 @@ const Students = () => {
 
         try {
             await createStudentAPI(payload);
-            notifySuccess("Tạo người dùng thành công!");
+            notifySuccess("Tạo sinh viên thành công!");
             form.resetFields();
             setModalOpen(false);
             fetchStudents();
         } catch (err) {
-            console.error("Lỗi khi tạo người dùng:", err);
-            showErrorNotification("Tạo người dùng thất bại", err.response?.data?.message || err.message);
+            showErrorNotification("Tạo sinh viên thất bại", err.response?.data?.message || err.message);
         }
     };
 
     const handleUpdateStudent = async (values) => {
+        if (!values.id) {
+            showErrorNotification("Không tìm thấy ID sinh viên");
+            return;
+        }
+
         const payload = {
             email: values.email,
             name: values.name,
-            dateOfBirth: values.dateOfBirth.format("YYYY-MM-DD"),
+            dateOfBirth: values.dateOfBirth ? values.dateOfBirth.format("YYYY-MM-DD") : null,
             sex: values.sex,
             ms: values.ms,
             manganh: values.manganh,
         };
 
-        console.log(payload);
-
         try {
-            await updateStudentAPI(editingUser.id, payload);
-            notifySuccess("Cập nhật người dùng thành công!");
+            await updateStudentAPI(values.id, payload);
+            notifySuccess("Cập nhật sinh viên thành công!");
             form.resetFields();
             setModalOpen(false);
             setEditingUser(null);
             fetchStudents();
         } catch (err) {
-            showErrorNotification("Lỗi cập nhật người dùng", err.message);
+            showErrorNotification("Lỗi cập nhật sinh viên", err.response?.data?.message || err.message);
         }
     };
 
@@ -198,7 +207,15 @@ const Students = () => {
                         Quản lý Sinh viên
                     </Title>
                     <div style={{ marginBottom: 16 }}>
-                        <Button type="primary" icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>
+                        <Button
+                            type="primary"
+                            icon={<PlusOutlined />}
+                            onClick={() => {
+                                setEditingUser(null);
+                                form.resetFields();
+                                setModalOpen(true);
+                            }}
+                        >
                             Thêm sinh viên
                         </Button>
                     </div>
@@ -210,7 +227,7 @@ const Students = () => {
                 </Card>
 
                 <Modal
-                    title={editingUser ? "Chỉnh sửa người dùng" : "Thêm người dùng mới"}
+                    title={editingUser ? "Chỉnh sửa sinh viên" : "Thêm sinh viên mới"}
                     open={modalOpen}
                     onCancel={() => {
                         setModalOpen(false);
@@ -222,6 +239,10 @@ const Students = () => {
                     cancelText="Hủy"
                 >
                     <Form form={form} layout="vertical" onFinish={editingUser ? handleUpdateStudent : handleAddStudent}>
+                        <Form.Item name="id" hidden>
+                            <Input />
+                        </Form.Item>
+
                         <Form.Item label="Email" name="email" rules={[{ required: true, message: "Vui lòng nhập email" }]}>
                             <Input />
                         </Form.Item>
@@ -239,7 +260,7 @@ const Students = () => {
                         <Form.Item label="Giới tính" name="sex" rules={[{ required: true, message: "Vui lòng chọn giới tính" }]}>
                             <Select>
                                 <Option value="Nam">Nam</Option>
-                                <Option value="Nu">Nữ</Option>
+                                <Option value="Nữ">Nữ</Option>
                             </Select>
                         </Form.Item>
 
@@ -251,12 +272,12 @@ const Students = () => {
                             <Input />
                         </Form.Item>
 
-                        <Form.Item label="Mã ngành" name="manganh" rules={[{ required: true, message: "Vui lòng nhập mã ngành" }]}>
+                        <Form.Item label="Mã ngành" name="manganh" rules={[{ required: true, message: "Vui lòng chọn ngành" }]}>
                             <Select placeholder="Chọn ngành">
                                 {majors.map((major) => (
-                                    <Select.Option key={major.maNganh} value={major.maNganh}>
+                                    <Option key={major.maNganh} value={major.maNganh}>
                                         {major.tenNganh}
-                                    </Select.Option>
+                                    </Option>
                                 ))}
                             </Select>
                         </Form.Item>
