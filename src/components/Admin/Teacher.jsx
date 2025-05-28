@@ -110,6 +110,8 @@ const Teachers = () => {
             ms: values.ms,
         };
 
+        console.log(payload);
+
         try {
             await updateTeacherAPI(editingUser.id, payload);
             notifySuccess("Cập nhật tài khoản giảng viên thành công");

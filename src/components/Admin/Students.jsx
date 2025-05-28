@@ -109,6 +109,8 @@ const Students = () => {
             manganh: values.manganh,
         };
 
+        console.log(payload);
+
         try {
             await updateStudentAPI(editingUser.id, payload);
             notifySuccess("Cập nhật người dùng thành công!");
