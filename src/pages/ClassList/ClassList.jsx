@@ -19,7 +19,7 @@ function ClassList() {
     const now = new Date();
     const currentMonth = now.getMonth() + 1; // getMonth() trả về 0-11
     const currentYear = now.getFullYear();
-    const semester = currentMonth >= 6 ? 1 : 2;
+    const semester = currentMonth >= 6 ? 2 : 1;
     const yearRange = semester === 1 ? `${currentYear}-${currentYear + 1}` : `${currentYear - 1}-${currentYear}`;
 
     // lấy thông tin lớp và phiếu đăng ký để hiển thị
