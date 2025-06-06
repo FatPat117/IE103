@@ -85,7 +85,6 @@ function Schedule() {
                                     return (
                                         <td key={day} rowSpan={course.rowSpan} className={cx("schedule__course")}>
                                             <strong className={cx("course-code")}>{course.room}</strong>
-                                            <span className={cx("student-count")}>Sĩ số: {course.siso}</span>
                                             <span className={cx("course-title")}>{course.subject}</span>
                                             <span className={cx("teacher-name")}>{course.teacher}</span>
                                             {course.start && course.end && (

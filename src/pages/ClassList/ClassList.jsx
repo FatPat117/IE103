@@ -30,6 +30,7 @@ function ClassList() {
                 const mssv = info.ms;
 
                 const allClasses = await getAllClassesAPI();
+                console.log("All classes fetched:", allClasses);
 
                 const filtered = allClasses.filter((cls) => cls.hocKi === semester && cls.namHoc === yearRange);
 
@@ -186,6 +187,7 @@ function ClassList() {
     // hàm xác nhận đăng ký
     const handleConfirmRegistration = () => {
         message.success("Đăng ký thành công!");
+        window.location.reload();
     };
 
     return (
