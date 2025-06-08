@@ -27,7 +27,7 @@ function Schedule() {
 
     useEffect(() => {
         const fetchSchedule = async () => {
-            const maPDK = localStorage.getItem("maPDK");
+            const maPDK = sessionStorage.getItem("maPDK");
             if (!maPDK) return;
             const data = await getRegistrationFormByIdAPI(maPDK);
             if (data?.phieuDangKyLopHocList) {
@@ -96,7 +96,11 @@ function Schedule() {
                                             )}
                                         </td>
                                     );
-                                } else if (mergedCourses.some((c) => c.startPeriodIndex < periodIndex && c.endPeriodIndex > periodIndex)) {
+                                } else if (
+                                    mergedCourses.some(
+                                        (c) => c.startPeriodIndex < periodIndex && c.endPeriodIndex > periodIndex
+                                    )
+                                ) {
                                     return null;
                                 } else {
                                     return <td key={day}></td>;

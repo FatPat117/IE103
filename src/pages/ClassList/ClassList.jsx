@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./ClassList.module.css";
-import { getAllClassesAPI, createRegistrationAPI, addClassToRegistrationAPI, removeClassFromRegistrationAPI, getRegistrationFormByStudentIdAPI, getUserByIdAPI, getRegistrationFormByIdAPI } from "~/services/api.service";
+import {
+    getAllClassesAPI,
+    createRegistrationAPI,
+    addClassToRegistrationAPI,
+    removeClassFromRegistrationAPI,
+    getRegistrationFormByStudentIdAPI,
+    getUserByIdAPI,
+    getRegistrationFormByIdAPI,
+} from "~/services/api.service";
 import { showErrorNotification } from "~/utils/showErrorNotification";
 import { message } from "antd";
 
@@ -41,12 +49,14 @@ function ClassList() {
                     return;
                 }
 
-                let maPDK = localStorage.getItem("maPDK");
+                let maPDK = sessionStorage.getItem("maPDK");
 
                 if (!maPDK) {
                     const registrationForms = await getRegistrationFormByStudentIdAPI(mssv);
 
-                    const currentRegistrationForm = registrationForms.find((form) => form.hocKi === semester && form.namHoc === yearRange);
+                    const currentRegistrationForm = registrationForms.find(
+                        (form) => form.hocKi === semester && form.namHoc === yearRange
+                    );
 
                     if (currentRegistrationForm) {
                         maPDK = currentRegistrationForm.maPDK;
@@ -61,7 +71,7 @@ function ClassList() {
                         maPDK = newRegistration.maPDK;
                     }
 
-                    localStorage.setItem("maPDK", maPDK);
+                    sessionStorage.setItem("maPDK", maPDK);
                 }
 
                 setRegistrationId(maPDK);
@@ -113,7 +123,9 @@ function ClassList() {
 
                         const sameSubject = cls.mamh === selected.mamh;
                         const sameDay = cls.thu === selected.thu;
-                        const timeOverlap = !(cls.tietKetThuc < selected.tietBatDau || cls.tietBatDau > selected.tietKetThuc);
+                        const timeOverlap = !(
+                            cls.tietKetThuc < selected.tietBatDau || cls.tietBatDau > selected.tietKetThuc
+                        );
 
                         if (!selectedIds.includes(cls.malh) && (sameSubject || (sameDay && timeOverlap))) {
                             updatedDisabled[cls.malh] = true;
@@ -134,7 +146,9 @@ function ClassList() {
                 const conflicts = classData.filter((cls) => {
                     const sameSubject = cls.mamh === selectedClass.mamh;
                     const sameDay = cls.thu === selectedClass.thu;
-                    const timeOverlap = !(cls.tietKetThuc < selectedClass.tietBatDau || cls.tietBatDau > selectedClass.tietKetThuc);
+                    const timeOverlap = !(
+                        cls.tietKetThuc < selectedClass.tietBatDau || cls.tietBatDau > selectedClass.tietKetThuc
+                    );
 
                     return cls.malh !== malh && !selectedClasses[cls.malh] && (sameSubject || (sameDay && timeOverlap));
                 });
@@ -168,7 +182,9 @@ function ClassList() {
 
                     const sameSubject = cls.mamh === selected.mamh;
                     const sameDay = cls.thu === selected.thu;
-                    const timeOverlap = !(cls.tietKetThuc < selected.tietBatDau || cls.tietBatDau > selected.tietKetThuc);
+                    const timeOverlap = !(
+                        cls.tietKetThuc < selected.tietBatDau || cls.tietBatDau > selected.tietKetThuc
+                    );
 
                     if (!selectedIds.includes(cls.malh) && (sameSubject || (sameDay && timeOverlap))) {
                         updatedDisabled[cls.malh] = true;
@@ -182,7 +198,11 @@ function ClassList() {
         calculateDisabledClasses();
     }, [selectedClasses, classData]);
 
-    const filteredClasses = classData.filter((item) => item.malh.toLowerCase().includes(searchTerm.toLowerCase()) || item.mamh?.toLowerCase().includes(searchTerm.toLowerCase()));
+    const filteredClasses = classData.filter(
+        (item) =>
+            item.malh.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.mamh?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     // hàm xác nhận đăng ký
     const handleConfirmRegistration = () => {
@@ -194,7 +214,13 @@ function ClassList() {
         <div className={cx("wrapper")}>
             <div className="container">
                 <h2 className={cx("title")}>Danh sách lớp mở đăng ký</h2>
-                <input type="text" placeholder="Nhập mã lớp hoặc mã môn học để tìm kiếm..." className={cx("search-input", "full-width")} value={searchTerm} onChange={handleSearch} />
+                <input
+                    type="text"
+                    placeholder="Nhập mã lớp hoặc mã môn học để tìm kiếm..."
+                    className={cx("search-input", "full-width")}
+                    value={searchTerm}
+                    onChange={handleSearch}
+                />
                 <table className={cx("table")}>
                     <thead>
                         <tr>
@@ -217,7 +243,13 @@ function ClassList() {
                                 })}
                             >
                                 <td className={cx("td")}>
-                                    <input type="checkbox" className={cx("checkbox-small")} checked={!!selectedClasses[item.malh]} disabled={!!disabledClasses[item.malh]} onChange={() => toggleSelection(item)} />
+                                    <input
+                                        type="checkbox"
+                                        className={cx("checkbox-small")}
+                                        checked={!!selectedClasses[item.malh]}
+                                        disabled={!!disabledClasses[item.malh]}
+                                        onChange={() => toggleSelection(item)}
+                                    />
                                 </td>
                                 <td className={cx("td")}>{item.malh}</td>
                                 <td className={cx("td")}>{item.mamh}</td>

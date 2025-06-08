@@ -10,7 +10,7 @@ const cx = classNames.bind(styles);
 function Confirmed() {
     const [registeredCourses, setRegisteredCourses] = useState([]);
     const [credits, setCredits] = useState(0);
-    const maPDK = localStorage.getItem("maPDK");
+    const maPDK = sessionStorage.getItem("maPDK");
 
     const fetchUpdatedRegistrationForm = async () => {
         try {
