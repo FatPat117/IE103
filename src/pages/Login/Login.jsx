@@ -22,7 +22,7 @@ function Login() {
         try {
             const res = await loginAPI(studentId, password, true);
 
-            localStorage.setItem("studentId", res.id);
+            sessionStorage.setItem("studentId", res.id);
 
             if (res.role === "SINHVIEN") {
                 navigate("/dashboard");
@@ -44,11 +44,28 @@ function Login() {
                         <img src={logo_header} alt="Logo UIT" className={cx("logo")} />
                     </div>
                     <form onSubmit={handleLogin}>
-                        <input type="text" placeholder="Mã số sinh viên" required value={studentId} onChange={(e) => setStudentId(e.target.value)} />
+                        <input
+                            type="text"
+                            placeholder="Mã số sinh viên"
+                            required
+                            value={studentId}
+                            onChange={(e) => setStudentId(e.target.value)}
+                        />
 
                         <div className={cx("password-input-wrapper")}>
-                            <input type={showPassword ? "text" : "password"} placeholder="Mật khẩu" required value={password} onChange={(e) => setPassword(e.target.value)} className={cx("password-input")} />
-                            <button type="button" className={cx("toggle-password")} onClick={() => setShowPassword(!showPassword)}>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Mật khẩu"
+                                required
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className={cx("password-input")}
+                            />
+                            <button
+                                type="button"
+                                className={cx("toggle-password")}
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
                                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                             </button>
                         </div>

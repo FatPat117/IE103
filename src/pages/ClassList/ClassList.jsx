@@ -22,7 +22,7 @@ function ClassList() {
     const [classData, setClassData] = useState([]);
     const [registrationId, setRegistrationId] = useState(null);
 
-    const studentId = localStorage.getItem("studentId");
+    const studentId = sessionStorage.getItem("studentId");
 
     const now = new Date();
     const currentMonth = now.getMonth() + 1; // getMonth() trả về 0-11
@@ -228,6 +228,7 @@ function ClassList() {
                             <th className={cx("th", "header")}>Mã lớp học</th>
                             <th className={cx("th", "header")}>Mã môn học</th>
                             <th className={cx("th", "header")}>Tên môn học</th>
+                            <th className={cx("th", "header")}>Số lượng sinh viên đã đăng ký</th>
                             <th className={cx("th", "header")}>Sĩ số</th>
                             <th className={cx("th", "header")}>Tiết bắt đầu</th>
                             <th className={cx("th", "header")}>Tiết kết thúc</th>
@@ -255,6 +256,7 @@ function ClassList() {
                                 <td className={cx("td")}>{item.mamh}</td>
                                 <td className={cx("td")}>{item.tenMH}</td>
                                 <td className={cx("td")}>{item.soLuongSinhVien}</td>
+                                <td className={cx("td")}>{item.soLuongSinhVienToiDa}</td>
                                 <td className={cx("td")}>{item.tietBatDau}</td>
                                 <td className={cx("td")}>{item.tietKetThuc}</td>
                             </tr>
